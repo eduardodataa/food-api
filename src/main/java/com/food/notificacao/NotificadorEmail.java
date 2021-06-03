@@ -11,17 +11,16 @@ import com.food.modelo.Cliente;
  * @author duduc
  *
  */
-//@Component
+@Component
 public class NotificadorEmail implements Notificador {
 	
 	private boolean caixaAlta;
 	private String hostServidor;
-	
-	public NotificadorEmail(String hostServidor){
-		System.out.println("NotificadorEmail: instância via @Component");
-		this.hostServidor = hostServidor;
-	}
-	
+//	
+//	public NotificadorEmail(String hostServidor){
+//		this.hostServidor = hostServidor;
+//	}
+//	
 	
 	
 	@Override
