@@ -11,7 +11,12 @@ import com.food.modelo.Cliente;
  * @author duduc
  *
  */
+
+
+// @Primary - faz a desambiguação de componentes que implementam a mesma interface que o Spring tenta instanciar na classe ativação
+//@Qualifier("email") //solução alternativa para desambiguação
 @Component
+@TipoDoNotificador(NivelUrgencia.SEM_URGENCIA)
 public class NotificadorEmail implements Notificador {
 	
 	private boolean caixaAlta;

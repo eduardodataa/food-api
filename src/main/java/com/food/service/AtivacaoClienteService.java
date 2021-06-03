@@ -4,13 +4,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.food.modelo.Cliente;
+import com.food.notificacao.NivelUrgencia;
 import com.food.notificacao.Notificador;
+import com.food.notificacao.TipoDoNotificador;
 
 @Component
 public class AtivacaoClienteService {
 
-	//outra opção de injeção
-//	@Autowired "fio-automático"
+//	@Qualifier("email") //solução alternativa para desambiguação, aumenta o acoplamento
+	@TipoDoNotificador(NivelUrgencia.URGENTE)
 	private @Autowired Notificador notificador;
 	
 	//define o construtor padrão
@@ -31,16 +33,8 @@ public class AtivacaoClienteService {
 		}else {
 			System.out.println("notificador null");
 		}
+			
+		
 	}
-
-	//outra opção de injeção
-//	@Autowired 
-//	public void setNotificador(Notificador notificador) {
-//		this.notificador = notificador;
-//	}
-
-
-	
-	
 
 }

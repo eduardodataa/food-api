@@ -7,8 +7,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.food.modelo.Cliente;
 import com.food.service.AtivacaoClienteService;
 
-import lombok.AllArgsConstructor;
-
 @Controller
 //@AllArgsConstructor
 public class MeuPrimeiroController {
