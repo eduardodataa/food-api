@@ -3,6 +3,7 @@
  */
 package com.food.notificacao;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.food.modelo.Cliente;
@@ -22,9 +23,14 @@ public class NotificadorSMS implements Notificador {
 	
 	private boolean caixaAlta;
 	private String hostServidor;
+
+	@Autowired
+	private NotificadorProperties notificadorProperties;
 	
 	@Override
 	public void notificar(Cliente cliente, String msg) {
+		System.out.println("host :" + notificadorProperties.getHostServidor());
+		System.out.println("porta :" + notificadorProperties.getPortaServidor());
 		if(caixaAlta) {
 			msg = msg.toUpperCase();
 		}

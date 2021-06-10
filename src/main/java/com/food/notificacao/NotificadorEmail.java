@@ -25,10 +25,6 @@ public class NotificadorEmail implements Notificador {
 	@Autowired
 	private NotificadorProperties notificadorProperties;
 	
-	@Value("${notificador.email.porta-servidor}")
-	private Integer porta;
-	
-	
 	@Override
 	public void notificar(Cliente cliente, String msg) {
 		System.out.println("host :" + notificadorProperties.getHostServidor());
