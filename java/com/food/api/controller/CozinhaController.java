@@ -4,10 +4,12 @@ import java.util.List;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,6 +22,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.food.api.model.CozinhasXmlWrapper;
 import com.food.domain.model.Cozinha;
 import com.food.domain.repository.CozinhaRepository;
+
+import javassist.NotFoundException;
 
 @RestController
 @RequestMapping("/cozinhas")
@@ -75,5 +79,20 @@ public class CozinhaController {
 		Cozinha cozinhaAtual = cozinhaRepository.buscar(cozinhaId);
 		BeanUtils.copyProperties(cozinha, cozinhaAtual, "id");
 		return ResponseEntity.ok(cozinhaRepository.salvar(cozinhaAtual));
+	}
+	
+	@DeleteMapping("/{cozinhaId}") // atualização de um recurso
+	@ResponseStatus(HttpStatus.OK)
+	public ResponseEntity<Cozinha> excluir(@PathVariable Long cozinhaId) {
+		try {
+			try {
+				cozinhaRepository.remover(cozinhaId);
+			} catch (NotFoundException e) {
+				return ResponseEntity.notFound().build();			
+			}
+			return ResponseEntity.noContent().build();
+		} catch (DataIntegrityViolationException e) {
+			return ResponseEntity.status(HttpStatus.CONFLICT).build();
+		}
 	}
 }

@@ -11,6 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.food.domain.model.Cozinha;
 import com.food.domain.repository.CozinhaRepository;
 
+import javassist.NotFoundException;
+
 @Component
 public class CozinhaRepositoryImpl implements CozinhaRepository {
 
@@ -39,6 +41,16 @@ public class CozinhaRepositoryImpl implements CozinhaRepository {
 	@Transactional
 	public void remover(Cozinha cozinha) {
 		cozinha = buscar(cozinha.getId());
+		em.remove(cozinha);
+	}
+	
+	@Override
+	@Transactional
+	public void remover(Long cozinhaId) throws NotFoundException {
+		Cozinha cozinha = buscar(cozinhaId);
+		if(cozinha == null) {
+			throw new NotFoundException("Recurso não encontrado");
+		}
 		em.remove(cozinha);
 	}
 	
