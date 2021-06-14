@@ -10,6 +10,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonRootName;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -20,6 +24,7 @@ import lombok.NoArgsConstructor;
  *
  */
 
+@JsonRootName("cozinha") // altera o elemento raiz pro XML
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 @Table
@@ -32,7 +37,7 @@ public class Cozinha {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY) 
 	private Long id;
-	
+
 	@JoinColumn(nullable = false)
 	private String nome;
 
