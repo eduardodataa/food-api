@@ -2,8 +2,10 @@ insert into cozinha (id, nome) values (1, 'Tailandesa');
 insert into cozinha (id, nome) values (2, 'Indiana'); 
 insert into cozinha (id, nome) values (3,'Brasileira'); 
 insert into cozinha (id, nome) values (4, 'Italiana'); 
+insert into cozinha (id, nome) values (5, 'Variada'); 
 
 insert into restaurante (nome, cozinha_id, taxa_frete) values ('Rocco', 4, 20);
+insert into restaurante (nome, cozinha_id, taxa_frete) values ('La Boheme', 4, 20);
 
 insert into estado (id, nome) values (1,'Santa Catarina');
 insert into estado (id, nome) values (2,'São Paulo');

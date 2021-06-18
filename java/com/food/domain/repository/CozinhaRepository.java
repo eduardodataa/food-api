@@ -2,9 +2,9 @@ package com.food.domain.repository;
 
 import java.util.List;
 
-import com.food.domain.model.Cozinha;
+import org.springframework.dao.EmptyResultDataAccessException;
 
-import javassist.NotFoundException;
+import com.food.domain.model.Cozinha;
 
 public interface CozinhaRepository {
 	
@@ -12,6 +12,6 @@ public interface CozinhaRepository {
 	Cozinha buscar(Long id);
 	Cozinha salvar(Cozinha cozinha);
 	void remover(Cozinha cozinha);
-	void remover(Long cozinhaId) throws NotFoundException;
+	void remover(Long cozinhaId) throws EmptyResultDataAccessException;
 
 }

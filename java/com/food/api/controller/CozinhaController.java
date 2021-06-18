@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -20,10 +19,11 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.food.api.model.CozinhasXmlWrapper;
+import com.food.domain.exception.EntidadeEmUsoException;
+import com.food.domain.exception.EntidadeNaoEncontradaException;
 import com.food.domain.model.Cozinha;
 import com.food.domain.repository.CozinhaRepository;
-
-import javassist.NotFoundException;
+import com.food.domain.service.CadastroCozinhaService;
 
 @RestController
 @RequestMapping("/cozinhas")
@@ -31,67 +31,69 @@ public class CozinhaController {
 
 	@Autowired
 	private CozinhaRepository cozinhaRepository;
-	
-	
-	//produces informa o formato que retornará, mesmo a aplicação aceitando outros formatos
+
+	@Autowired
+	private CadastroCozinhaService cadastroCozinhaService;
+
+	// produces informa o formato que retornará, mesmo a aplicação aceitando outros
+	// formatos
 //	@GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
 	@GetMapping
-	public List<Cozinha> listar(){
+	public List<Cozinha> listar() {
 		return cozinhaRepository.listar();
 	}
-	
-	@GetMapping(produces = {MediaType.APPLICATION_XML_VALUE})
-	public CozinhasXmlWrapper listarXML(){
+
+	@GetMapping(produces = { MediaType.APPLICATION_XML_VALUE })
+	public CozinhasXmlWrapper listarXML() {
 		return new CozinhasXmlWrapper(cozinhaRepository.listar());
 	}
-	
+
 	@ResponseStatus(HttpStatus.CREATED)
 	@GetMapping("/{cozinhaId}")
 	public ResponseEntity<Cozinha> buscar(@PathVariable Long cozinhaId) {
 		Cozinha cozinha = cozinhaRepository.buscar(cozinhaId);
-		if(cozinha == null) {
+		if (cozinha == null) {
 			return ResponseEntity.notFound().build();
 		}
 		return ResponseEntity.status(HttpStatus.OK).body(cozinha);
 	}
-	
+
 	@GetMapping("/localInexistente/{cozinhaId}")
 	public ResponseEntity<Cozinha> localInexistente(@PathVariable Long cozinhaId) {
 		Cozinha cozinha = cozinhaRepository.buscar(cozinhaId);
-		if(cozinha == null) {
+		if (cozinha == null) {
 			HttpHeaders headers = new HttpHeaders();
 			headers.add(HttpHeaders.LOCATION, "http://api.algafood.local:8080/gastronomia/");
 			return ResponseEntity.status(HttpStatus.FOUND).headers(headers).build();
 		}
 		return ResponseEntity.status(HttpStatus.OK).body(cozinha);
 	}
-	
-	@PostMapping // post não são indempotente, cada post terá efeito colateral que será a persistência
+
+	@PostMapping // post não são indempotente, cada post terá efeito colateral que será a
+					// persistência
 	@ResponseStatus(HttpStatus.CREATED)
 	public Cozinha salvar(@RequestBody Cozinha cozinha) {
 		System.out.println(cozinha + cozinha.getNome());
-		return cozinhaRepository.salvar(cozinha);
+		return cadastroCozinhaService.salvar(cozinha);
 	}
-	
+
 	@PutMapping("/{cozinhaId}") // atualização de um recurso
 	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<Cozinha> atualizar(@PathVariable Long cozinhaId, @RequestBody Cozinha cozinha) {
 		Cozinha cozinhaAtual = cozinhaRepository.buscar(cozinhaId);
 		BeanUtils.copyProperties(cozinha, cozinhaAtual, "id");
-		return ResponseEntity.ok(cozinhaRepository.salvar(cozinhaAtual));
+		return ResponseEntity.ok(cadastroCozinhaService.salvar(cozinhaAtual));
 	}
-	
+
 	@DeleteMapping("/{cozinhaId}") // atualização de um recurso
 	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<Cozinha> excluir(@PathVariable Long cozinhaId) {
 		try {
-			try {
-				cozinhaRepository.remover(cozinhaId);
-			} catch (NotFoundException e) {
-				return ResponseEntity.notFound().build();			
-			}
+			cadastroCozinhaService.excluir(cozinhaId);
 			return ResponseEntity.noContent().build();
-		} catch (DataIntegrityViolationException e) {
+		} catch (EntidadeNaoEncontradaException e) {
+			return ResponseEntity.notFound().build();
+		} catch (EntidadeEmUsoException e) {
 			return ResponseEntity.status(HttpStatus.CONFLICT).build();
 		}
 	}

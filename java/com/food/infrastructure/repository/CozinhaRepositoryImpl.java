@@ -5,13 +5,12 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.food.domain.model.Cozinha;
 import com.food.domain.repository.CozinhaRepository;
-
-import javassist.NotFoundException;
 
 @Component
 public class CozinhaRepositoryImpl implements CozinhaRepository {
@@ -46,10 +45,10 @@ public class CozinhaRepositoryImpl implements CozinhaRepository {
 	
 	@Override
 	@Transactional
-	public void remover(Long cozinhaId) throws NotFoundException {
+	public void remover(Long cozinhaId) throws EmptyResultDataAccessException {
 		Cozinha cozinha = buscar(cozinhaId);
 		if(cozinha == null) {
-			throw new NotFoundException("Recurso não encontrado");
+			throw new EmptyResultDataAccessException(1);
 		}
 		em.remove(cozinha);
 	}
