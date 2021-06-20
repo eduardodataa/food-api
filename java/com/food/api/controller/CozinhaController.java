@@ -85,7 +85,7 @@ public class CozinhaController {
 		return ResponseEntity.ok(cadastroCozinhaService.salvar(cozinhaAtual));
 	}
 
-	@DeleteMapping("/{cozinhaId}") // atualização de um recurso
+	@DeleteMapping("/{cozinhaId}")
 	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<Cozinha> excluir(@PathVariable Long cozinhaId) {
 		try {

@@ -14,12 +14,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Data
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class Restaurante {
 
 	@EqualsAndHashCode.Include
