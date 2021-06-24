@@ -1,6 +1,7 @@
 package com.food.api.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +34,7 @@ public class EstadoController {
 	
 	@GetMapping
 	public List<Estado> listar(){
-		return estadoRepository.listar();
+		return estadoRepository.findAll();
 	}
 	
 	//atualizar estado
@@ -41,9 +42,9 @@ public class EstadoController {
 	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<?> atualizar(@PathVariable Long estadoId, @RequestBody Estado estado) {
 		try {
-			Estado estadoAtual = estadoRepository.buscar(estadoId);
+			Optional<Estado> estadoAtual = estadoRepository.findById(estadoId);
 			BeanUtils.copyProperties(estado,estadoAtual , "id");
-			return ResponseEntity.ok(cadastroEstadoService.salvar(estadoAtual));
+			return ResponseEntity.ok(cadastroEstadoService.salvar(estadoAtual.get()));
 		} catch (Exception e) {
 			return ResponseEntity.badRequest().body("Erro na requisição: " + e.getMessage());
 		}

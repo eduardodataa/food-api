@@ -19,7 +19,7 @@ public class ConsultaRestauranteMain {
 		
 		RestauranteRepository restauranteRepository = context.getBean(RestauranteRepository.class);
 		
-		restauranteRepository.listar().stream().forEach(r -> System.out.println(r.getNome() + " - cozinha: " + r.getCozinha().getNome() + " - Frete:" + r.getTaxaFrete()));
+		restauranteRepository.findAll().stream().forEach(r -> System.out.println(r.getNome() + " - cozinha: " + r.getCozinha().getNome() + " - Frete:" + r.getTaxaFrete()));
 		
 //		System.out.println(RestauranteRepository.salvar(new Restaurante(null, "La Boheme", null, null)));
 //		Restaurante c = new Restaurante(null, "Artuzi", null, null);
