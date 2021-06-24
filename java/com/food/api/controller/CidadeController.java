@@ -1,6 +1,7 @@
 package com.food.api.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,17 +35,17 @@ public class CidadeController {
 
 	@GetMapping
 	public List<Cidade> listar() {
-		return cidadeRepository.listar();
+		return cidadeRepository.findAll();
 	}
 
 	@ResponseStatus(HttpStatus.CREATED)
 	@GetMapping("/{cidadeId}")
 	public ResponseEntity<Cidade> buscar(@PathVariable Long cidadeId) {
-		Cidade cidade = cidadeRepository.buscar(cidadeId);
-		if (cidade == null) {
+		Optional<Cidade> cidade = cidadeRepository.findById(cidadeId);
+		if (cidade.isEmpty()) {
 			return ResponseEntity.notFound().build();
 		}
-		return ResponseEntity.status(HttpStatus.OK).body(cidade);
+		return ResponseEntity.status(HttpStatus.OK).body(cidade.get());
 	}
 
 	@PostMapping // post não são indempotente, cada post terá efeito colateral que será a
@@ -61,9 +62,9 @@ public class CidadeController {
 	@PutMapping("/{cidadeId}") // atualização de um recurso
 	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<?> atualizar(@PathVariable Long cidadeId, @RequestBody Cidade cidade) {
-		Cidade cidadeAtual;
+		Optional<Cidade> cidadeAtual;
 		try {
-			cidadeAtual = cidadeRepository.buscar(cidadeId);
+			cidadeAtual = cidadeRepository.findById(cidadeId);
 			if(cidadeAtual == null) {
 				return ResponseEntity.badRequest().body(String.format("Cidade com id %d não pode ser nulo", cidadeId));
 			}
@@ -72,7 +73,7 @@ public class CidadeController {
 			}else {
 				BeanUtils.copyProperties(cidade, cidadeAtual, "id");				
 			}
-			return ResponseEntity.ok(cadastroCidadeService.salvar(cidadeAtual));
+			return ResponseEntity.ok(cadastroCidadeService.salvar(cidadeAtual.get()));
 		} catch (Exception e) {
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}

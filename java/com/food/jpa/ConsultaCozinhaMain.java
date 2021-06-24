@@ -20,11 +20,11 @@ public class ConsultaCozinhaMain {
 		
 		CozinhaRepository cozinhaRepository = context.getBean(CozinhaRepository.class);
 		
-		System.out.println(cozinhaRepository.salvar(new Cozinha("Brasileira")));
+		System.out.println(cozinhaRepository.save(new Cozinha("Brasileira")));
 		Cozinha c = new Cozinha("Japosesa");
-		c = cozinhaRepository.salvar(c);
+		c = cozinhaRepository.save(c);
 		
-		cozinhaRepository.remover(c);
+		cozinhaRepository.delete(c);
 		
 		
 		

@@ -22,7 +22,7 @@ public class InclusaoCozinhaMain {
 		
 		CozinhaRepository cozinhaRepository = context.getBean(CozinhaRepository.class);
 		
-		List<Cozinha> listaCozinhas = cozinhaRepository.listar();
+		List<Cozinha> listaCozinhas = cozinhaRepository.findAll();
 		
 		for (Cozinha cozinha : listaCozinhas) {
 			System.out.println(cozinha.getNome());

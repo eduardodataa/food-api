@@ -22,11 +22,10 @@ public class CadastroRestauranteService {
 	private CozinhaRepository cozinhaRepository;
 	
 	public Restaurante salvar(Restaurante restaurante) throws EntidadeNaoEncontradaException {
-		Cozinha cozinha = cozinhaRepository.buscar(restaurante.getCozinha().getId());
-		if(cozinha == null) {
-			throw new EntidadeNaoEncontradaException(
-					String.format("Não existe cadastro de cozinha com código %d", restaurante.getCozinha().getId()));
-		}
+		Cozinha cozinha = cozinhaRepository.findById(restaurante.getCozinha().getId())
+				.orElseThrow( () -> new EntidadeNaoEncontradaException(
+					String.format("Não existe cadastro de cozinha com código %d", restaurante.getCozinha().getId())));
+		restaurante.setCozinha(cozinha);
 		return restauranteRepository.salvar(restaurante);
 	}
 	
