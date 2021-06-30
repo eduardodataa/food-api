@@ -18,3 +18,5 @@ insert into permissao values (1,'Permissao geral', 'Acesso a todas as funcionali
 insert into forma_pagamento values (1,'Cartão');
 insert into forma_pagamento values (2,'Dinheiro');
 insert into forma_pagamento values (3,'PIX');
+
+INSERT INTO restaurante_forma_pagamento (restaurante_id, forma_pagamento_id) VALUES(1, 1), (1, 2), (1, 3), (2, 1);

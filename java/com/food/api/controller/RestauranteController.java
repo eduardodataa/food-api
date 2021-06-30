@@ -66,15 +66,15 @@ public class RestauranteController {
 
 	@PutMapping("/{restauranteId}") // atualização de um recurso
 	@ResponseStatus(HttpStatus.OK)
-	public ResponseEntity<?> atualizar(@PathVariable Long restauranteId, @RequestBody Restaurante Restaurante) {
-		Optional<Restaurante> restauranteAtual;
+	public ResponseEntity<?> atualizar(@PathVariable Long restauranteId, @RequestBody Restaurante restaurante) {
+		Restaurante restauranteAtual;
 		try {
-			restauranteAtual = restauranteRepository.findById(restauranteId);
+			restauranteAtual = restauranteRepository.findById(restauranteId).orElseThrow();
 			if(restauranteAtual == null) {
 				return ResponseEntity.badRequest().body(String.format("Restaurante com id %d não pode ser nulo", restauranteId));
 			}
-			BeanUtils.copyProperties(Restaurante, restauranteAtual, "id");
-			return ResponseEntity.ok(cadastroRestauranteService.salvar(restauranteAtual.get()));
+			BeanUtils.copyProperties(restaurante, restauranteAtual, "id", "formasPagamento");
+			return ResponseEntity.ok(cadastroRestauranteService.salvar(restauranteAtual));
 		} catch (Exception e) {
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}
