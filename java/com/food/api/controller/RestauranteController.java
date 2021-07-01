@@ -40,7 +40,9 @@ public class RestauranteController {
 
 	@GetMapping
 	public List<Restaurante> listar() {
-		return restauranteRepository.findAll();
+		List<Restaurante> lista = restauranteRepository.findAll();
+		lista.get(0).getCozinha().getNome();
+		return lista;
 	}
 
 	@ResponseStatus(HttpStatus.CREATED)
@@ -73,7 +75,7 @@ public class RestauranteController {
 			if(restauranteAtual == null) {
 				return ResponseEntity.badRequest().body(String.format("Restaurante com id %d não pode ser nulo", restauranteId));
 			}
-			BeanUtils.copyProperties(restaurante, restauranteAtual, "id", "formasPagamento");
+			BeanUtils.copyProperties(restaurante, restauranteAtual, "id", "formasPagamento", "endereco", "dataAtualizacao", "dataCadastro", "produtos");
 			return ResponseEntity.ok(cadastroRestauranteService.salvar(restauranteAtual));
 		} catch (Exception e) {
 			return ResponseEntity.badRequest().body(e.getMessage());
