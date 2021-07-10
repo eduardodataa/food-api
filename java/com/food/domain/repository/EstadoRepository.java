@@ -1,8 +1,5 @@
 package com.food.domain.repository;
 
-import java.util.List;
-
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.food.domain.model.Estado;
