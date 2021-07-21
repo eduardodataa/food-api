@@ -13,6 +13,8 @@ import com.food.domain.repository.EstadoRepository;
 @Service
 public class CadastroEstadoService {
 	
+	private static final String MSG_ESTADO_NAO_ENCONTRADO = "Não existe um cadastro de estado com código %d";
+	private static final String MSG_ESTADO_EM_USO = "Estado de código %d não pode ser removida";
 	@Autowired
 	private EstadoRepository estadoRepository;
 	
@@ -25,11 +27,16 @@ public class CadastroEstadoService {
 			estadoRepository.deleteById(estadoId);
 		} catch (EmptyResultDataAccessException e) {
 			throw new EntidadeNaoEncontradaException(
-					String.format("Não existe um cadastro de estado com código %d", estadoId));
+					String.format(MSG_ESTADO_NAO_ENCONTRADO, estadoId));
 		}catch (DataIntegrityViolationException e) {
 			throw new EntidadeEmUsoException(
-					String.format("Estado de código %d não pode ser removida", estadoId));
+					String.format(MSG_ESTADO_EM_USO, estadoId));
 		}
+	}
+	
+	public Estado buscarOuFalhar(Long estadoId) {
+		return estadoRepository.findById(estadoId)
+				.orElseThrow( () -> new EntidadeNaoEncontradaException(String.format(MSG_ESTADO_NAO_ENCONTRADO, estadoId)));
 	}
 
 }
