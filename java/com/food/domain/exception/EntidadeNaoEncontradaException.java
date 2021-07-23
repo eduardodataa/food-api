@@ -4,7 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(value = HttpStatus.NOT_FOUND) //, reason = "Mensagem para aparecer no retorno: Entidade não encontrada"
-public class EntidadeNaoEncontradaException extends RuntimeException {
+public abstract class EntidadeNaoEncontradaException extends RuntimeException {
 
 	/**
 	 * 

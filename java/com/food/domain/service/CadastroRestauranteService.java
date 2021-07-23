@@ -6,7 +6,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.food.domain.exception.EntidadeEmUsoException;
-import com.food.domain.exception.EntidadeNaoEncontradaException;
+import com.food.domain.exception.RestauranteNaoEncontradoException;
 import com.food.domain.model.Cozinha;
 import com.food.domain.model.Restaurante;
 import com.food.domain.repository.RestauranteRepository;
@@ -16,7 +16,7 @@ public class CadastroRestauranteService {
 	
 	private static final String RESTAURANTE_EM_USO = "Restaurante de código %d não pode ser removida";
 
-	private static final String MSG_RESTAURANTE_NAO_ENCONTRADO = "Não existe um cadastro de Restaurante com código %d";
+//	private static final String MSG_RESTAURANTE_NAO_ENCONTRADO = "Não existe um cadastro de Restaurante com código %d";
 
 	@Autowired
 	private RestauranteRepository restauranteRepository;
@@ -24,7 +24,7 @@ public class CadastroRestauranteService {
 	@Autowired
 	private CadastroCozinhaService cadastroCozinhaService;
 	
-	public Restaurante salvar(Restaurante restaurante) throws EntidadeNaoEncontradaException {
+	public Restaurante salvar(Restaurante restaurante) {
 		try {
 			Cozinha cozinha = cadastroCozinhaService.buscarOuFalhar(restaurante.getCozinha().getId());
 			restaurante.setCozinha(cozinha);
@@ -38,8 +38,7 @@ public class CadastroRestauranteService {
 		try {
 			restauranteRepository.deleteById(restauranteId);
 		} catch (EmptyResultDataAccessException e) {
-			throw new EntidadeNaoEncontradaException(
-					String.format(MSG_RESTAURANTE_NAO_ENCONTRADO, restauranteId));
+			throw new RestauranteNaoEncontradoException(restauranteId);
 		}catch (DataIntegrityViolationException e) {
 			throw new EntidadeEmUsoException(
 					String.format(RESTAURANTE_EM_USO, restauranteId));
@@ -48,7 +47,7 @@ public class CadastroRestauranteService {
 	
 	public Restaurante buscarOuFalhar(Long restauranteId) {
 		return restauranteRepository.findById(restauranteId)
-				.orElseThrow( () -> new EntidadeNaoEncontradaException(String.format(MSG_RESTAURANTE_NAO_ENCONTRADO, restauranteId)));
+				.orElseThrow( () -> new RestauranteNaoEncontradoException(restauranteId));
 	}
 
 }
