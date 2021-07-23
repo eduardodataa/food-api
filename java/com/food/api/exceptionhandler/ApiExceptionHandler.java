@@ -4,10 +4,11 @@ import java.time.LocalDateTime;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import com.food.domain.exception.EntidadeEmUsoException;
 import com.food.domain.exception.EntidadeNaoEncontradaException;
 import com.food.domain.exception.NegocioException;
 
@@ -17,7 +18,7 @@ import com.food.domain.exception.NegocioException;
  *
  */
 @ControllerAdvice
-public class ApiExceptionHandler {
+public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 	
 	/**
 	 * manipula a exceção para utilizar uma classe com campos customizados para retornar no erro da resposta
@@ -46,20 +47,16 @@ public class ApiExceptionHandler {
 				.body(problema);
 	}
 	
-	/**
-	 * customiza, neste caso, exceções não criadas por nós, pelo spring neste caso
-	 * @param e
-	 * @return
-	 */
-	@ExceptionHandler(HttpMediaTypeNotSupportedException.class)
-	public ResponseEntity<?> tratarHttpMediaTypeNotSupportedException(HttpMediaTypeNotSupportedException e){
+	@ExceptionHandler(EntidadeEmUsoException.class)
+	public ResponseEntity<?> tratarEntidadeEmUsoException(EntidadeEmUsoException e){
 		Problema problema = Problema.builder()
 				.dataHora(LocalDateTime.now())
-				.mensagem("Midia não suportada")
+				.mensagem(e.getMessage())
 				.build();
 		
-		return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE)
+		return ResponseEntity.status(HttpStatus.CONFLICT)
 				.body(problema);
 	}
+	
 
 }
