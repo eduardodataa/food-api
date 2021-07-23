@@ -1,9 +1,6 @@
 package com.food.domain.exception;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
-
-@ResponseStatus(value = HttpStatus.NOT_FOUND) //, reason = "Mensagem para aparecer no retorno: Entidade não encontrada"
+//@ResponseStatus(value = HttpStatus.NOT_FOUND) //, reason = "Mensagem para aparecer no retorno: Entidade não encontrada"
 public abstract class EntidadeNaoEncontradaException extends RuntimeException {
 
 	/**
