@@ -1,5 +1,6 @@
 package com.food.api.exceptionhandler;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -9,10 +10,13 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.http.converter.HttpMessageNotWritableException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.context.request.async.AsyncRequestTimeoutException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import com.fasterxml.jackson.databind.JsonMappingException.Reference;
@@ -32,6 +36,8 @@ import com.food.domain.exception.NegocioException;
 @ControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 	
+	private static final String ERRO_INTERNO_INSPERADO_NO_SISTEMA_ENTRE_EM_CONTATO_COM_O_ADMINISTRADOR_DO_SISTEMA = "Ocorreu um erro interno insperado no sistema. Entre em contato com o administrador do sistema";
+
 	/**
 	 * método que trata mensagens não compreendidas pela API
 	 */
@@ -51,16 +57,19 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 
 		if(rootCause instanceof PropertyBindingException) {
 			String detailMessage = "A propriedade '%s' não existe. Favor remova-a da requisição";
-			return handleIgnoredPropertyException((PropertyBindingException)rootCause, headers, status, request, detailMessage, problemType);
+			return handlePropertyBinding((PropertyBindingException)rootCause, headers, status, request, detailMessage, problemType);
 		}
 
 		//senão trata de maneira genérica
 		String detail = "Corpo da requisição inválido. Verifique erro de sintaxe";
-		Problem problem = createProblemBuilder(status, problemType, detail).build();
+		Problem problem = createProblemBuilder(status, problemType, detail, detail).build();
 
 		return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
 	}
 	
+	/**
+	 * Trata erros na conversão de parâmetros passados na URL
+	 */
 	@Override
 	protected ResponseEntity<Object> handleTypeMismatch(TypeMismatchException ex, HttpHeaders headers,
 			HttpStatus status, WebRequest request) {
@@ -72,7 +81,45 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 		
 		return super.handleTypeMismatch(ex, headers, status, request);
 	}
+	
+	@Override
+	protected ResponseEntity<Object> handleNoHandlerFoundException(NoHandlerFoundException ex, HttpHeaders headers,
+			HttpStatus status, WebRequest request) {
 
+		ProblemType problemType = ProblemType.RECURSO_NAO_ENCONTRADO;
+		String detailMessage = "O recurso '%s' que você tentou acessar é inexistente";
+		String detail = String.format(detailMessage, ex.getRequestURL());
+		Problem problem = createProblemBuilder(status, problemType, detail, detail).build();
+		return handleExceptionInternal(ex, problem, headers, status, request);
+		
+//		return super.handleNoHandlerFoundException(ex, headers, status, request);
+	}
+	
+	@ExceptionHandler(Exception.class)
+	protected ResponseEntity<Object> handleUncaught(Exception ex, WebRequest request) {
+
+
+		HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+		ProblemType problemType = ProblemType.ERRO_INTERNO_SISTEMA;
+		String detail = ERRO_INTERNO_INSPERADO_NO_SISTEMA_ENTRE_EM_CONTATO_COM_O_ADMINISTRADOR_DO_SISTEMA;
+		ex.printStackTrace();
+		Problem problem = createProblemBuilder(status, problemType, detail, detail).build();
+		return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
+		
+//		return super.handleHttpMessageNotWritable(ex, headers, status, request);
+	}
+	
+
+	/**
+	 * Monta o objeto tratado para o retorno de parâmetro inválido
+	 * 
+	 * @param ex
+	 * @param headers
+	 * @param status
+	 * @param request
+	 * @param problemType
+	 * @return
+	 */
 	private ResponseEntity<Object> handleMethodArgumentTypeMismatch(TypeMismatchException ex, HttpHeaders headers,
 			HttpStatus status, WebRequest request, ProblemType problemType) {
 		
@@ -80,18 +127,29 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 		String detailMessage = "O parâmetro de URL '%s' recebeu o valor '%s', "
 		        + "que é de um tipo inválido. Corrija e informe um valor compatível com o tipo '%s'.";
 		String detail = String.format(detailMessage, ee.getName(), ex.getValue(), ex.getRequiredType().getSimpleName());
-		Problem problem = createProblemBuilder(status, problemType, detail).build();
+		Problem problem = createProblemBuilder(status, problemType, detail, ERRO_INTERNO_INSPERADO_NO_SISTEMA_ENTRE_EM_CONTATO_COM_O_ADMINISTRADOR_DO_SISTEMA)
+				.build();
 		
 		return handleExceptionInternal(ex, problem, headers, status, request);
 	}
 	
-
-	private ResponseEntity<Object> handleIgnoredPropertyException(PropertyBindingException ex, HttpHeaders headers,
+	/**
+	 * monta o objeto quando se tenta utilizar atributos anotados com @JsonIgnore
+	 * @param ex
+	 * @param headers
+	 * @param status
+	 * @param request
+	 * @param format
+	 * @param problemType
+	 * @return
+	 */
+	private ResponseEntity<Object> handlePropertyBinding(PropertyBindingException ex, HttpHeaders headers,
 			HttpStatus status, WebRequest request, String format, ProblemType problemType) {
 
 		String path = getPathFromException(ex.getPath());
 		String detail = String.format(format, path);
-		Problem problem = createProblemBuilder(status, problemType, detail).build();
+		Problem problem = createProblemBuilder(status, problemType, detail, ERRO_INTERNO_INSPERADO_NO_SISTEMA_ENTRE_EM_CONTATO_COM_O_ADMINISTRADOR_DO_SISTEMA)
+				.build();
 
 		return handleExceptionInternal(ex, problem, headers, status, request);
 		
@@ -114,7 +172,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 				path, 
 				ex.getValue(), 
 				ex.getTargetType().getSimpleName());
-		Problem problem = createProblemBuilder(status, problemType, detail).build();
+		Problem problem = createProblemBuilder(status, problemType, detail, detail).build();
 
 		return handleExceptionInternal(ex, problem, headers, status, request);
 	}
@@ -128,10 +186,10 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 	public ResponseEntity<?> handleEntidadeNaoEncontradaException(EntidadeNaoEncontradaException e, WebRequest request){
 		
 		HttpStatus status = HttpStatus.NOT_FOUND;
-		ProblemType problemType = ProblemType.ENTIDADE_NAO_ENCONTRADA;
+		ProblemType problemType = ProblemType.RECURSO_NAO_ENCONTRADO;
 		String detail = e.getMessage();
 		
-		Problem problem = createProblemBuilder(status, problemType, detail).build();
+		Problem problem = createProblemBuilder(status, problemType, detail, detail).build();
 		
 		return handleExceptionInternal(e, problem, new HttpHeaders(), status, request);
 	}
@@ -142,7 +200,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 		HttpStatus status = HttpStatus.BAD_REQUEST;
 		ProblemType problemType = ProblemType.ERRO_NEGOCIO;
 		String detail = e.getMessage();
-		Problem problem = createProblemBuilder(status, problemType, detail).build();
+		Problem problem = createProblemBuilder(status, problemType, detail, detail).build();
 		
 		return handleExceptionInternal(e, problem, new HttpHeaders(), status, request);
 	}
@@ -153,7 +211,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 		HttpStatus status = HttpStatus.CONFLICT;
 		ProblemType problemType = ProblemType.ENTIDADE_EM_USO;
 		String detail = e.getMessage();
-		Problem problem = createProblemBuilder(status, problemType, detail).build();
+		Problem problem = createProblemBuilder(status, problemType, detail, detail).build();
 		
 		return handleExceptionInternal(e, problem, new HttpHeaders(), status, request);
 	}
@@ -165,25 +223,31 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 			body = Problem.builder()
 					.title(status.getReasonPhrase())
 					.status(status.value())
+					.timestamp(LocalDateTime.now())
+					.userMessage(ERRO_INTERNO_INSPERADO_NO_SISTEMA_ENTRE_EM_CONTATO_COM_O_ADMINISTRADOR_DO_SISTEMA)
 					.build();
 		}else {
 			if(body instanceof String) {
 				body = Problem.builder()
 						.title((String) body)
 						.status(status.value())
+						.timestamp(LocalDateTime.now())
+						.userMessage(ERRO_INTERNO_INSPERADO_NO_SISTEMA_ENTRE_EM_CONTATO_COM_O_ADMINISTRADOR_DO_SISTEMA)
 						.build();
 			}
 		}
 		return super.handleExceptionInternal(ex, body, headers, status, request);
 	}
 	
-	private Problem.ProblemBuilder createProblemBuilder(HttpStatus status, ProblemType type, String detail) {
+	private Problem.ProblemBuilder createProblemBuilder(HttpStatus status, ProblemType type, String detail, String userMessage) {
 		
 		return Problem.builder()
 				.status(status.value())
 				.type(type.getUri())
 				.title(type.getTitle())
-				.detail(detail);
+				.detail(detail)
+				.timestamp(LocalDateTime.now())
+				.userMessage(userMessage);
 		
 	}
 
