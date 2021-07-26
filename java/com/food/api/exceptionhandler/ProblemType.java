@@ -10,7 +10,8 @@ public enum ProblemType {
 	ENTIDADE_EM_USO ("/entidade-em-uso", "Entidade em uso"),
 	MENSAGEM_INCOMPREENSIVEL ("/mensagem-inconpreensivel", "Mensagem incompreensivel"),
 	PARAMETRO_INVALIDO ("/parametro-invalido", "Parâmetro Inválido"),
-	ERRO_INTERNO_SISTEMA("/erro-sistema", "Erro do sistema");
+	ERRO_INTERNO_SISTEMA("/erro-sistema", "Erro do sistema"),
+	DADOS_INVALIDOS("/dados-invalidos", "Dados Inválidos");
 	
 	
 	private String uri;

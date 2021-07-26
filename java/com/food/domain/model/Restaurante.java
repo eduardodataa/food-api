@@ -17,6 +17,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -43,6 +44,7 @@ public class Restaurante {
 	@GeneratedValue(strategy = GenerationType.IDENTITY) //passa a responsabilidade pro BD
 	private Long id;
 	
+	@NotNull
 	private String nome;
 	
 	@Column(nullable = false)
