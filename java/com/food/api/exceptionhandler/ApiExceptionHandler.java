@@ -10,12 +10,11 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.http.converter.HttpMessageNotWritableException;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.context.request.async.AsyncRequestTimeoutException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
@@ -102,11 +101,20 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 
 		ProblemType problemType = ProblemType.DADOS_INVALIDOS;
 		String detailMessage = "Um ou campos estão inválidos. Faça o preenchimento correto e tente novamente.";
-//		String detail = String.format(detailMessage, ex.getRequestURL());
-		Problem problem = createProblemBuilder(status, problemType, detailMessage, detailMessage).build();
+		
+		BindingResult bindingResult = ex.getBindingResult();
+		List<Problem.Field> problemFields = bindingResult.getFieldErrors().stream()
+				.map(fieldErro -> Problem.Field.builder()
+						.name(fieldErro.getField())
+						.userMessage(fieldErro.getDefaultMessage())
+						.build())
+				.collect(Collectors.toList());
+		
+		Problem problem = createProblemBuilder(status, problemType, detailMessage, detailMessage)
+				.fields(problemFields)
+				.build();
 		return handleExceptionInternal(ex, problem, headers, status, request);
 		
-//		return super.handleMethodArgumentNotValid(ex, headers, status, request);
 	}
 	
 	@ExceptionHandler(Exception.class)

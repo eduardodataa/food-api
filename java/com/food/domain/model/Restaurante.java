@@ -17,13 +17,17 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.food.Groups;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -39,18 +43,27 @@ import lombok.ToString;
 @ToString
 
 public class Restaurante {
+
 	@EqualsAndHashCode.Include
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY) //passa a responsabilidade pro BD
 	private Long id;
-	
-	@NotNull
+
+//	@NotNull
+//	@NotEmpty
+//	@NotNull
+	@NotBlank(groups = Groups.CadastroRestaurante.class) //não aceita espaços em branco
 	private String nome;
-	
+
+	@NotNull(groups = Groups.CadastroRestaurante.class)
+	//@DecimalMin("1")
+	@PositiveOrZero
 	@Column(nullable = false)
 	private BigDecimal taxaFrete;
 
+	@NotNull(groups = Groups.CadastroRestaurante.class)
 //	@JsonIgnore
+	@Valid // valida as propriedades de cozinha
 	@JsonIgnoreProperties({"hibernateLazyInitializer"})
 	@ManyToOne(fetch = FetchType.LAZY)//por padrão todo 'ToOne' é eager e o 'ToMany' é lazy
 	@JoinColumn(nullable = false)

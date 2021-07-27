@@ -2,6 +2,8 @@ package com.food.api.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -48,20 +50,7 @@ public class CozinhaController {
 	@GetMapping("/{cozinhaId}")
 	public Cozinha buscar(@PathVariable Long cozinhaId) {
 //assinatura original: public ResponseEntity<Cozinha> buscar(@PathVariable Long cozinhaId) {
-		//		Optional<Cozinha> cozinha = cozinhaRepository.findById(cozinhaId);
-//		if (cozinha.isEmpty()) {
-//			return ResponseEntity.notFound().build();
-//		}
-//		//utilizei isPresent apenas para fins didátivos
-//		if(cozinha.isPresent()) {
-//			return ResponseEntity.status(HttpStatus.OK).body(cozinha.get());			
-//		}
 //		
-//		return ResponseEntity.notFound().build();
-		//1ª ALTERNATIVA mais elegante
-//		return cozinhaRepository.findById(cozinhaId)
-//				.orElseThrow( () -> new EntidadeNaoEncontradaException("aaaa"));
-		//2ª ALTERNATIVA mais elegante
 		return cadastroCozinhaService.buscarOuFalhar(cozinhaId);
 	}
 
@@ -78,7 +67,7 @@ public class CozinhaController {
 
 	@PostMapping // post não são indempotente, cada post terá efeito colateral que será a persistência
 	@ResponseStatus(HttpStatus.CREATED)
-	public Cozinha salvar(@RequestBody Cozinha cozinha) {
+	public Cozinha salvar(@RequestBody @Valid Cozinha cozinha) {
 		System.out.println(cozinha + cozinha.getNome());
 		return cadastroCozinhaService.salvar(cozinha);
 	}
@@ -91,28 +80,9 @@ public class CozinhaController {
 		return cadastroCozinhaService.salvar(cozinhaAtual);
 	}
 
-//	@DeleteMapping("/{cozinhaId}")
-//	@ResponseStatus(HttpStatus.OK)
-//	public ResponseEntity<?> excluir(@PathVariable Long cozinhaId) {
-//		try {
-//			cadastroCozinhaService.excluir(cozinhaId);
-//			return ResponseEntity.noContent().build();
-//		} catch (EntidadeNaoEncontradaException e) {
-//			return ResponseEntity.notFound().build();
-//		} catch (EntidadeEmUsoException e) {
-//			return ResponseEntity.badRequest().body(e.getMessage());
-//		}
-//	}
-
 	@DeleteMapping("/{cozinhaId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void excluir(@PathVariable Long cozinhaId) {
-//		try {
-//			cadastroCozinhaService.excluir(cozinhaId);
-//		} catch (EntidadeNaoEncontradaException e) {
-//			throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-//		}
-		// OU
 		//Apenas o método exlcuir, pois agora a classe de exceção herda do httpstatusexception
 		cadastroCozinhaService.excluir(cozinhaId);
 		
