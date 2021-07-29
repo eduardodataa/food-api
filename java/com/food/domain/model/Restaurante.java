@@ -8,7 +8,6 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -29,7 +28,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.food.Groups.CozinhaId;
+import com.food.Groups;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -55,9 +54,9 @@ public class Restaurante {
 //	@NotEmpty
 //	@NotNull
 	@NotBlank //não aceita espaços em branco
+	@Column(nullable = false)
 	private String nome;
 
-	@NotNull
 	//@DecimalMin("1")
 	@PositiveOrZero
 	@Column(nullable = false)
@@ -65,10 +64,10 @@ public class Restaurante {
 
 	@NotNull
 //	@JsonIgnore
-	@ConvertGroup(from = Default.class, to = CozinhaId.class) //converta group default p/ cadastros restaurante.class
+	@ConvertGroup(from = Default.class, to = Groups.CozinhaId.class) //converta group default p/ cadastros restaurante.class
 	@Valid // valida as propriedades de cozinha
 	@JsonIgnoreProperties({"hibernateLazyInitializer"})
-	@ManyToOne(fetch = FetchType.LAZY)//por padrão todo 'ToOne' é eager e o 'ToMany' é lazy
+	@ManyToOne//por padrão todo 'ToOne' é eager e o 'ToMany' é lazy
 	@JoinColumn(nullable = false)
 	private Cozinha cozinha;
 	
@@ -86,7 +85,7 @@ public class Restaurante {
 	@Column(nullable = false)
 	private LocalDateTime dataAtualizacao;
 	
-	@ManyToMany(fetch = FetchType.EAGER)
+	@ManyToMany
 	@JsonIgnore
 	@JoinTable(name = "restaurante_forma_pagamento",
 	joinColumns = @JoinColumn(name = "restaurante_id"),

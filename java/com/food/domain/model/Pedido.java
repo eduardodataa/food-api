@@ -44,7 +44,7 @@ public class Pedido {
 	private Restaurante restaurante;
 
 	@ManyToOne
-	@JoinColumn
+	@JoinColumn(nullable = false)
 	private Usuario cliente;
 
 	@Embedded

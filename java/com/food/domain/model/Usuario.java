@@ -35,6 +35,7 @@ public class Usuario {
 	private String senha;
 	
 	@CreationTimestamp
+	@Column(nullable = false, columnDefinition = "datetime")
 	private LocalDateTime dataCadastro;
 
 	

@@ -12,11 +12,15 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
+
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Data
 @Entity
 public class Grupo {
-	
+
+	@EqualsAndHashCode.Include
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
