@@ -93,6 +93,10 @@
 					</excludes>
 				</configuration>
 			</plugin>
+			<plugin>
+			<!-- não executa os testes das classes com final IT -->
+				<artifactId>maven-failsafe-plugin</artifactId>
+			</plugin>
 		</plugins>
 	</build>
 
