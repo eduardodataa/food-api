@@ -4,6 +4,7 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.hasSize;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,14 @@ class CadastroCozinhTestsIT {
 	 */
 	@LocalServerPort
 	private int port;
+	
+	@BeforeEach
+	public void setUp() {
+		RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
+		RestAssured.port = port; //substitui o port(port)
+		RestAssured.basePath = "/cozinhas"; //.basePath("/cozinhas")
+
+	}
 
 	@Autowired
 	private CadastroCozinhaService cadastroCozinhaService;
@@ -41,10 +50,7 @@ class CadastroCozinhTestsIT {
 	 */
 	@Test
 	void deveRetornarStatus200_QuandoConsutarCozinhas() {
-		RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
 		given()
-			.basePath("/cozinhas")
-			.port(port)
 			.accept(ContentType.JSON)
 		.when()
 			.get()
@@ -54,10 +60,7 @@ class CadastroCozinhTestsIT {
 
 	@Test
 	void deveConter5CozinhasQuandoConsutarCozinhas() {
-		RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
 		given()
-			.basePath("/cozinhas")
-			.port(port)
 			.accept(ContentType.JSON)
 		.when()
 			.get()
