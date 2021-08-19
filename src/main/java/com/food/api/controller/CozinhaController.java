@@ -46,7 +46,7 @@ public class CozinhaController {
 //		return new CozinhasXmlWrapper(cozinhaRepository.listar());
 //	}
 
-	@ResponseStatus(HttpStatus.CREATED)
+//	@ResponseStatus(HttpStatus.OK)
 	@GetMapping("/{cozinhaId}")
 	public Cozinha buscar(@PathVariable Long cozinhaId) {
 //assinatura original: public ResponseEntity<Cozinha> buscar(@PathVariable Long cozinhaId) {

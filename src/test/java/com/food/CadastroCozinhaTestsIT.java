@@ -1,6 +1,7 @@
 package com.food;
 
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.hasSize;
 
@@ -15,7 +16,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import com.food.domain.model.Cozinha;
+import com.food.domain.repository.CozinhaRepository;
 import com.food.domain.service.CadastroCozinhaService;
+import com.food.util.DatabaseCleaner;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -28,8 +32,8 @@ import io.restassured.http.ContentType;
 
 @ExtendWith(SpringExtension.class)//suporte pra carregar o contexto do spring
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT) //levanta o servidor em uma porta aleatória
-@TestPropertySource //configura para utilizar o application de test.properties
-class CadastroCozinhTestsIT {
+@TestPropertySource("/application-test.properties") //configura para utilizar o application de test.properties
+class CadastroCozinhaTestsIT {
 	
 	/**
 	 * @LocalServerPort injeta o número da porta que foi utilizada para levantar o servidor (SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -38,7 +42,10 @@ class CadastroCozinhTestsIT {
 	private int port;
 	
 	@Autowired
-	private Flyway flyway;
+	private DatabaseCleaner databaseCleaner;
+	
+//	@Autowired
+//	private Flyway flyway;
 	
 	@BeforeEach
 	public void setUp() {
@@ -46,12 +53,15 @@ class CadastroCozinhTestsIT {
 		RestAssured.port = port; //substitui o port(port)
 		RestAssured.basePath = "/cozinhas"; //.basePath("/cozinhas")
 
-		//executa o arquivo afterMigrate a cada execução de teste, impedindo que um teste impacte no outro
-		flyway.migrate();
+//		//executa o arquivo afterMigrate a cada execução de teste, impedindo que um teste impacte no outro
+//		flyway.migrate();
+		databaseCleaner.clearTables();
+		
+		prepararCozinha();
 	}
 
 	@Autowired
-	private CadastroCozinhaService cadastroCozinhaService;
+	private CozinhaRepository cozinhaRepository;
 	
 	/**
 	 * Necessita da parte web da aplicação
@@ -90,6 +100,51 @@ class CadastroCozinhTestsIT {
 			.post()
 		.then()
 			.statusCode(HttpStatus.CREATED.value());
+	}
+	
+	@Test
+	public void deveRetornarStatusERespostaCorretos_QuandoConsultarCozinhaExistene() {
+		given()
+			.pathParam("cozinhaId", 2)
+			.accept(ContentType.JSON)
+		.when()
+			.get("/{cozinhaId}")
+		.then()
+			.statusCode(HttpStatus.OK.value())
+			.body("nome", equalTo("Americana"));
+	}
+	
+	@Test
+	public void deveRetornarStatus404_QuandoConsultarCozinhaInexistene() {
+		given()
+			.pathParam("cozinhaId", 7)
+			.accept(ContentType.JSON)
+		.when()
+			.get("/{cozinhaId}")
+		.then()
+			.statusCode(HttpStatus.NOT_FOUND.value());
+	}
+	
+	private void prepararCozinha() {
+		Cozinha cozinha1 = new Cozinha();
+		cozinha1.setNome("Tailandesa");
+		cozinhaRepository.save(cozinha1);
+
+		cozinha1 = new Cozinha();
+		cozinha1.setNome("Americana");
+		cozinhaRepository.save(cozinha1);
+
+		cozinha1 = new Cozinha();
+		cozinha1.setNome("Brasileira");
+		cozinhaRepository.save(cozinha1);
+
+		cozinha1 = new Cozinha();
+		cozinha1.setNome("Chinesa");
+		cozinhaRepository.save(cozinha1);
+
+		cozinha1 = new Cozinha();
+		cozinha1.setNome("Indiana");
+		cozinhaRepository.save(cozinha1);
 	}
 
 }
