@@ -4,6 +4,7 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.hasSize;
 
+import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -34,12 +35,17 @@ class CadastroCozinhTestsIT {
 	@LocalServerPort
 	private int port;
 	
+	@Autowired
+	private Flyway flyway;
+	
 	@BeforeEach
 	public void setUp() {
 		RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
 		RestAssured.port = port; //substitui o port(port)
 		RestAssured.basePath = "/cozinhas"; //.basePath("/cozinhas")
 
+		//executa o arquivo afterMigrate a cada execução de teste, impedindo que um teste impacte no outro
+		flyway.migrate();
 	}
 
 	@Autowired
@@ -70,6 +76,18 @@ class CadastroCozinhTestsIT {
 			.body("nome", hasSize(5))
 			//Neste caso Matcher.hasItems procura 2 valores do 'nome' : "Brasileira", "Tailandesa"
 			.body("nome", hasItems("Tailandesa", "Indiana"));
+	}
+
+	@Test
+	void deveRetornar501NoCadastroDeCozinha() {
+		given()
+			.body("{ \"nome\": \"Chinesa\" }")
+			.contentType(ContentType.JSON)
+			.accept(ContentType.JSON)
+		.when()
+			.post()
+		.then()
+			.statusCode(HttpStatus.CREATED.value());
 	}
 
 }
