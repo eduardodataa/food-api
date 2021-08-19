@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.food.domain.service.CadastroCozinhaService;
@@ -27,6 +28,7 @@ import io.restassured.http.ContentType;
 
 @ExtendWith(SpringExtension.class)//suporte pra carregar o contexto do spring
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT) //levanta o servidor em uma porta aleatória
+@TestPropertySource //configura para utilizar o application de test.properties
 class CadastroCozinhTestsIT {
 	
 	/**
