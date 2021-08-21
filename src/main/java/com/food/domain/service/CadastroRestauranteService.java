@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.food.domain.exception.EntidadeEmUsoException;
 import com.food.domain.exception.RestauranteNaoEncontradoException;
@@ -24,6 +25,12 @@ public class CadastroRestauranteService {
 	@Autowired
 	private CadastroCozinhaService cadastroCozinhaService;
 	
+	/**
+	 * boa prática anotar com @transaction os métodos públicos
+	 * @param restaurante
+	 * @return
+	 */
+	@Transactional
 	public Restaurante salvar(Restaurante restaurante) {
 		try {
 			Cozinha cozinha = cadastroCozinhaService.buscarOuFalhar(restaurante.getCozinha().getId());
@@ -33,7 +40,8 @@ public class CadastroRestauranteService {
 			throw e;
 		}
 	}
-	
+
+	@Transactional
 	public void excluir(Long restauranteId)  {
 		try {
 			restauranteRepository.deleteById(restauranteId);
