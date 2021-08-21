@@ -5,7 +5,12 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.hasSize;
 
-import org.flywaydb.core.Flyway;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,10 +20,11 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.util.ResourceUtils;
+import org.springframework.util.StreamUtils;
 
 import com.food.domain.model.Cozinha;
 import com.food.domain.repository.CozinhaRepository;
-import com.food.domain.service.CadastroCozinhaService;
 import com.food.util.DatabaseCleaner;
 
 import io.restassured.RestAssured;
@@ -35,6 +41,9 @@ import io.restassured.http.ContentType;
 @TestPropertySource("/application-test.properties") //configura para utilizar o application de test.properties
 class CadastroCozinhaTestsIT {
 	
+	private static final String CORPO_COZINHA_CHINESA = getRecursoCozinha("/json/correto/cozinha.json");
+
+
 	/**
 	 * @LocalServerPort injeta o número da porta que foi utilizada para levantar o servidor (SpringBootTest.WebEnvironment.RANDOM_PORT)
 	 */
@@ -46,6 +55,10 @@ class CadastroCozinhaTestsIT {
 	
 //	@Autowired
 //	private Flyway flyway;
+	static final int COZINHA_ID_INEXISTENTE = 700;
+	
+	Cozinha cozinhaAmericana;
+	List<Cozinha> listaCozinhas = new ArrayList<>();
 	
 	@BeforeEach
 	public void setUp() {
@@ -56,7 +69,7 @@ class CadastroCozinhaTestsIT {
 //		//executa o arquivo afterMigrate a cada execução de teste, impedindo que um teste impacte no outro
 //		flyway.migrate();
 		databaseCleaner.clearTables();
-		
+		criarCozinhaAmericana();
 		prepararCozinha();
 	}
 
@@ -85,7 +98,7 @@ class CadastroCozinhaTestsIT {
 		.then()
 		//verificar a propriedade nome
 		//Matcher.hasSize serve para escrever expressões. Neste caso procura 5 ocorências do 'nome'
-			.body("nome", hasSize(5))
+			.body("nome", hasSize(listaCozinhas.size()))
 			//Neste caso Matcher.hasItems procura 2 valores do 'nome' : "Brasileira", "Tailandesa"
 			.body("nome", hasItems("Tailandesa", "Indiana"));
 	}
@@ -93,7 +106,7 @@ class CadastroCozinhaTestsIT {
 	@Test
 	void deveRetornar501NoCadastroDeCozinha() {
 		given()
-			.body("{ \"nome\": \"Chinesa\" }")
+			.body(CORPO_COZINHA_CHINESA)
 			.contentType(ContentType.JSON)
 			.accept(ContentType.JSON)
 		.when()
@@ -105,19 +118,19 @@ class CadastroCozinhaTestsIT {
 	@Test
 	public void deveRetornarStatusERespostaCorretos_QuandoConsultarCozinhaExistene() {
 		given()
-			.pathParam("cozinhaId", 2)
+			.pathParam("cozinhaId", cozinhaAmericana.getId())
 			.accept(ContentType.JSON)
 		.when()
 			.get("/{cozinhaId}")
 		.then()
 			.statusCode(HttpStatus.OK.value())
-			.body("nome", equalTo("Americana"));
+			.body("nome", equalTo(cozinhaAmericana.getNome()));
 	}
 	
 	@Test
 	public void deveRetornarStatus404_QuandoConsultarCozinhaInexistene() {
 		given()
-			.pathParam("cozinhaId", 7)
+			.pathParam("cozinhaId", COZINHA_ID_INEXISTENTE)
 			.accept(ContentType.JSON)
 		.when()
 			.get("/{cozinhaId}")
@@ -126,25 +139,49 @@ class CadastroCozinhaTestsIT {
 	}
 	
 	private void prepararCozinha() {
+		
 		Cozinha cozinha1 = new Cozinha();
 		cozinha1.setNome("Tailandesa");
-		cozinhaRepository.save(cozinha1);
-
-		cozinha1 = new Cozinha();
-		cozinha1.setNome("Americana");
-		cozinhaRepository.save(cozinha1);
+		
+		listaCozinhas.add(cozinha1);
+		listaCozinhas.add(cozinhaAmericana);
 
 		cozinha1 = new Cozinha();
 		cozinha1.setNome("Brasileira");
-		cozinhaRepository.save(cozinha1);
+		listaCozinhas.add(cozinha1);
 
 		cozinha1 = new Cozinha();
 		cozinha1.setNome("Chinesa");
-		cozinhaRepository.save(cozinha1);
+		listaCozinhas.add(cozinha1);
 
 		cozinha1 = new Cozinha();
 		cozinha1.setNome("Indiana");
-		cozinhaRepository.save(cozinha1);
+		listaCozinhas.add(cozinha1);
+		
+		listaCozinhas.stream().forEach( co -> cozinhaRepository.save(co));
+		
+		
+//		cozinhaRepository.save(cozinha1);
+//		cozinhaRepository.save(cozinhaAmericana);
+//		cozinhaRepository.save(cozinha1);
+//		cozinhaRepository.save(cozinha1);
+//		cozinhaRepository.save(cozinha1);
+	}
+
+	private Cozinha criarCozinhaAmericana() {
+		cozinhaAmericana = new Cozinha();
+		cozinhaAmericana.setNome("Americana");
+		return cozinhaAmericana;
+	}
+	
+
+	public static String getRecursoCozinha(String resourceName) {
+		try {
+			InputStream stream = ResourceUtils.class.getResourceAsStream(resourceName);
+			return StreamUtils.copyToString(stream, Charset.forName("UTF-8"));
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 }
