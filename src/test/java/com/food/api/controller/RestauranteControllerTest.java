@@ -145,6 +145,17 @@ class RestauranteControllerTest {
 			.body("title", equalTo("Dados Inválidos"));
 	}
 	
+	@Test
+	public void deveRetornarStatus404_QuandoConsultarRestauranteInexistente() {
+		given()
+			.pathParam("cozinhaId", RESTAURANTE_ID_INEXISTENTE)
+			.accept(ContentType.JSON)
+		.when()
+			.get("/{cozinhaId}")
+		.then()
+			.statusCode(HttpStatus.NOT_FOUND.value());
+	}
+	
 
 	public static String getResource(String resourceName) {
 		try {
