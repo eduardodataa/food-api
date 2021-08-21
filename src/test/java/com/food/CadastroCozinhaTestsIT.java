@@ -62,6 +62,7 @@ class CadastroCozinhaTestsIT {
 	
 	@BeforeEach
 	public void setUp() {
+		//Habilite o registro da solicitação e da resposta se a validação do teste REST Assureds falhar com detalhes de registro
 		RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
 		RestAssured.port = port; //substitui o port(port)
 		RestAssured.basePath = "/cozinhas"; //.basePath("/cozinhas")

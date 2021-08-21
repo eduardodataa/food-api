@@ -47,7 +47,6 @@ public class RestauranteController {
 	@GetMapping
 	public List<Restaurante> listar() {
 		List<Restaurante> lista = restauranteRepository.findAll();
-		lista.get(0).getCozinha().getNome();
 		return lista;
 	}
 
