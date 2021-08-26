@@ -26,8 +26,6 @@ import javax.validation.groups.Default;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.food.Groups;
 
 import lombok.AllArgsConstructor;
@@ -42,7 +40,6 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-
 public class Restaurante {
 
 	@EqualsAndHashCode.Include
@@ -67,33 +64,27 @@ public class Restaurante {
 //	@JsonIgnore
 	@ConvertGroup(from = Default.class, to = Groups.CozinhaId.class) //converta group default p/ cadastros restaurante.class
 	@Valid // valida as propriedades de cozinha
-	@JsonIgnoreProperties(value = "nome", allowGetters = true) //ignora o nome no set e retorna o nome no set
 	@ManyToOne//por padrão todo 'ToOne' é eager e o 'ToMany' é lazy
 	@JoinColumn(nullable = false)
 	private Cozinha cozinha;
 	
 	@Embedded
-	@JsonIgnore
 	private Endereco endereco;
 
-	@JsonIgnore
 	@CreationTimestamp
 	@Column(nullable = false)
 	private LocalDateTime dataCadastro;
 
-	@JsonIgnore
 	@UpdateTimestamp
 	@Column(nullable = false)
 	private LocalDateTime dataAtualizacao;
 	
 	@ManyToMany
-	@JsonIgnore
 	@JoinTable(name = "restaurante_forma_pagamento",
 	joinColumns = @JoinColumn(name = "restaurante_id"),
 	inverseJoinColumns = @JoinColumn(name = "forma_pagamento_id"))
 	private List<FormaPagamento> formasPagamento = new ArrayList<>();
 
-	@JsonIgnore
 	@OneToMany(mappedBy = "restaurantes")
 	private List<Produto> produtos = new ArrayList<>();
 	
