@@ -62,11 +62,12 @@ public class Restaurante {
 	@Column(nullable = false)
 	private BigDecimal taxaFrete;
 
+//	@JsonIgnoreProperties(value = "nome")
 	@NotNull
 //	@JsonIgnore
 	@ConvertGroup(from = Default.class, to = Groups.CozinhaId.class) //converta group default p/ cadastros restaurante.class
 	@Valid // valida as propriedades de cozinha
-	@JsonIgnoreProperties({"hibernateLazyInitializer"})
+	@JsonIgnoreProperties(value = "nome", allowGetters = true) //ignora o nome no set e retorna o nome no set
 	@ManyToOne//por padrão todo 'ToOne' é eager e o 'ToMany' é lazy
 	@JoinColumn(nullable = false)
 	private Cozinha cozinha;
