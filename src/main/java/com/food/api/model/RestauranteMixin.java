@@ -11,7 +11,7 @@ import com.food.domain.model.Endereco;
 import com.food.domain.model.FormaPagamento;
 import com.food.domain.model.Produto;
 
-public class RestauranteMixin {
+public abstract class RestauranteMixin {
 
 	@JsonIgnoreProperties(value = "nome", allowGetters = true) //ignora o nome no set e retorna o nome no set
 	private Cozinha cozinha;
@@ -29,7 +29,7 @@ public class RestauranteMixin {
 	private List<FormaPagamento> formasPagamento = new ArrayList<>();
 
 	@JsonIgnore
-	private List<Produto> produtos = new ArrayList<>();
+	private List<Produto> produtos;
 	
 	
 }
