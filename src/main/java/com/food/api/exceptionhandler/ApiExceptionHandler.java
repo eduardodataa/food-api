@@ -1,6 +1,6 @@
 package com.food.api.exceptionhandler;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -245,7 +245,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 			body = Problem.builder()
 					.title(status.getReasonPhrase())
 					.status(status.value())
-					.timestamp(LocalDateTime.now())
+					.timestamp(OffsetDateTime.now())
 					.userMessage(ERRO_INTERNO_INSPERADO_NO_SISTEMA_ENTRE_EM_CONTATO_COM_O_ADMINISTRADOR_DO_SISTEMA)
 					.build();
 		}else {
@@ -253,7 +253,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 				body = Problem.builder()
 						.title((String) body)
 						.status(status.value())
-						.timestamp(LocalDateTime.now())
+						.timestamp(OffsetDateTime.now())
 						.userMessage(ERRO_INTERNO_INSPERADO_NO_SISTEMA_ENTRE_EM_CONTATO_COM_O_ADMINISTRADOR_DO_SISTEMA)
 						.build();
 			}
@@ -268,7 +268,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 				.type(type.getUri())
 				.title(type.getTitle())
 				.detail(detail)
-				.timestamp(LocalDateTime.now())
+				.timestamp(OffsetDateTime.now())
 				.userMessage(userMessage);
 		
 	}

@@ -1,7 +1,6 @@
 package com.food.domain.model;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +17,6 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
 import javax.validation.groups.ConvertGroup;
@@ -51,7 +49,7 @@ public class Restaurante {
 //	@NotNull
 //	@NotEmpty
 //	@NotNull
-	@NotBlank //não aceita espaços em branco
+//	@NotBlank //não aceita espaços em branco
 	@Column(nullable = false)
 	private String nome;
 

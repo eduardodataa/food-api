@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.food.domain.exception.EntidadeEmUsoException;
@@ -60,8 +61,8 @@ class CadastroCozinhaIntegrationTestsIT {
 	@Test
 	public void deve_falhar_cozinha_em_uso() {
 		
-		EntidadeEmUsoException exception = 
-				Assertions.assertThrows(EntidadeEmUsoException.class, () ->{
+		DataIntegrityViolationException exception = 
+				Assertions.assertThrows(DataIntegrityViolationException.class, () ->{
 					cadastroCozinhaService.excluir(1l);					
 				});
 		
@@ -72,8 +73,8 @@ class CadastroCozinhaIntegrationTestsIT {
 	@Test
 	public void remover_cozinha() {
 		
-		EntidadeEmUsoException exception = 
-				Assertions.assertThrows(EntidadeEmUsoException.class, () ->{
+		DataIntegrityViolationException exception = 
+				Assertions.assertThrows(DataIntegrityViolationException.class, () ->{
 					cadastroCozinhaService.excluir(4l);					
 				});
 		

@@ -37,6 +37,8 @@ public class CadastroCozinhaService {
 		}catch (DataIntegrityViolationException e) {
 			throw new EntidadeEmUsoException(
 					String.format(MSG_COZINHA_EM_USO, cozinhaId));
+		}catch (Exception e) {
+			System.out.println("123");
 		}
 	}
 

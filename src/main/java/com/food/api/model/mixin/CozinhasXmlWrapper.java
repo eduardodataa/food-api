@@ -1,4 +1,4 @@
-package com.food.api.model;
+package com.food.api.model.mixin;
 
 import java.util.List;
 
