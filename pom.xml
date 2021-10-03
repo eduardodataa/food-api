@@ -16,6 +16,7 @@
 	<description>API de Delivery de Comida</description>
 	<properties>
 		<java.version>11</java.version>
+		<modelmapper.version>2.4.2</modelmapper.version>
 	</properties>
 
 	<dependencies>
@@ -83,6 +84,13 @@
 			<artifactId>rest-assured</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+		<dependency>
+			<groupId>org.modelmapper</groupId>
+			<artifactId>modelmapper</artifactId>
+			<version>${modelmapper.version}</version>
+		</dependency>
+		
 	</dependencies>
 
 	<build>

@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.food.api.assembler.RestauranteInputDesassembler;
 import com.food.api.assembler.RestauranteModelAssembler;
 import com.food.api.model.CozinhaDTO;
 import com.food.api.model.RestauranteDTO;
@@ -53,6 +54,9 @@ public class RestauranteController {
 	@Autowired
 	private RestauranteModelAssembler  restauranteModelAssembler;
 	
+	@Autowired
+	private RestauranteInputDesassembler restauranteInputDesassembler ;
+	
 	
 
 	@GetMapping
@@ -72,30 +76,15 @@ public class RestauranteController {
 		return restauranteDTO;
 	}
 
-	@PostMapping // post não são indempotente, cada post terá efeito colateral que será a
-					// persistência
+	@PostMapping // post não são indempotente, cada post terá efeito colateral que será a persistência
 	//@Validated(Groups.CozinhaId.class) valida só os atributos que estão anotados com o grupo
 	@ResponseStatus(HttpStatus.CREATED)
 	public RestauranteDTO salvar(@RequestBody @Valid RestauranteInput restauranteInput) {
 		try {
-			return restauranteModelAssembler.toModel(cadastroRestauranteService.salvar(toDomainModel(restauranteInput)));
+			return restauranteModelAssembler.toModel(cadastroRestauranteService.salvar(restauranteInputDesassembler.toDomainModel(restauranteInput)));
 		} catch (CozinhaNaoEncontradaException e) {
 			throw new NegocioException(e.getMessage());
 		}
-	}
-
-	
-
-	private Restaurante toDomainModel(@Valid RestauranteInput restauranteInput) {
-		Restaurante restaurante = new Restaurante();
-//		r.setId(restauranteInput.getId);
-		restaurante.setNome(restauranteInput.getNome());
-		
-		Cozinha c = new Cozinha();
-		c.setId(restauranteInput.getCozinha().getId());
-		restaurante.setCozinha(c);
-		restaurante.setTaxaFrete(restauranteInput.getTaxaFrete());
-		return restaurante;
 	}
 
 	@PutMapping("/{restauranteId}") // atualização de um recurso
