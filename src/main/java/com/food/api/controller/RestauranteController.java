@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -56,7 +57,9 @@ public class RestauranteController {
 	
 	@Autowired
 	private RestauranteInputDesassembler restauranteInputDesassembler ;
-	
+
+	@Autowired
+	private ModelMapper modelMapper;
 	
 
 	@GetMapping
@@ -87,11 +90,20 @@ public class RestauranteController {
 		}
 	}
 
+	/**
+	 * {@link RestauranteInput} possui somente os atributos que virão da interface, portanto não corre o risco de apagar dados do objeto original ou de copiar valores nulos
+	 * @param restauranteId
+	 * @param restauranteInput
+	 * @return
+	 */
 	@PutMapping("/{restauranteId}") // atualização de um recurso
 	@ResponseStatus(HttpStatus.OK)
-	public RestauranteDTO atualizar(@PathVariable Long restauranteId, @RequestBody @Valid Restaurante restaurante) {
+	public RestauranteDTO atualizar(@PathVariable Long restauranteId, @RequestBody @Valid RestauranteInput restauranteInput) {
 		Restaurante restauranteAtual = cadastroRestauranteService.buscarOuFalhar(restauranteId);
-		BeanUtils.copyProperties(restaurante, restauranteAtual, "id", "formasPagamento", "endereco", "dataAtualizacao", "dataCadastro", "produtos");
+		
+		restauranteInputDesassembler.copyToDomainObject(restauranteInput, restauranteAtual);
+		
+//		BeanUtils.copyProperties(restaurante, restauranteAtual, "id", "formasPagamento", "endereco", "dataAtualizacao", "dataCadastro", "produtos");
 		try {
 			return restauranteModelAssembler.toModel(cadastroRestauranteService.salvar(restauranteAtual));
 		} catch (EntidadeNaoEncontradaException e) {
@@ -112,7 +124,7 @@ public class RestauranteController {
 		
 		merge(campos, restauranteAtual, httpServletRequest);
 		
-		return atualizar(restauranteId, restauranteAtual);
+		return atualizar(restauranteId, modelMapper.map(restauranteAtual, RestauranteInput.class));
 	}
 
 	private void merge(Map<String, Object> camposOrigem, Restaurante restauranteDestino, HttpServletRequest httpServletRequest) {

@@ -9,6 +9,12 @@ public class ModelMapperConfig {
 
 	@Bean
 	public ModelMapper modelMapper() {
+		var modelMapper = new ModelMapper();
+		
+		//mapeamento "de-para"
+//		modelMapper.createTypeMap(Restaurante.class, RestauranteDTO.class)
+//			.addMapping(Restaurante::getTaxaFrete, RestauranteDTO::setPrecoFrete);
+		
 		return new ModelMapper();
 	}
 }

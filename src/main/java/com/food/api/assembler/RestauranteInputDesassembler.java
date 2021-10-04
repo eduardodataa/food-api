@@ -32,6 +32,17 @@ public class RestauranteInputDesassembler {
 		restaurante.setTaxaFrete(restauranteInput.getTaxaFrete());
 		return restaurante;
 	}
+	
+	/**
+	 * Restaurante é objeto de destino
+	 * @param restauranteInput
+	 * @param restaurante
+	 */
+	public void copyToDomainObject(RestauranteInput restauranteInput, Restaurante restaurante) {
+		//para evitar exception
+		restaurante.setCozinha(new Cozinha());
+		modelMapper.map(restauranteInput, restaurante);
+	}
 
 	
 }
