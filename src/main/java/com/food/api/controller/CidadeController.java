@@ -1,9 +1,11 @@
 package com.food.api.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.food.api.model.CidadeDTO;
 import com.food.domain.exception.EntidadeNaoEncontradaException;
 import com.food.domain.exception.NegocioException;
 import com.food.domain.model.Cidade;
@@ -33,33 +36,45 @@ public class CidadeController {
 	@Autowired
 	private CadastroCidadeService cadastroCidadeService;
 
+	@Autowired
+	private ModelMapper modelMapper;
+
 	@GetMapping
-	public List<Cidade> listar() {
-		return cidadeRepository.findAll();
+	public List<CidadeDTO> listar() {
+		List<Cidade> listaCidade = cidadeRepository.findAll();
+		return cidadesToCidadeDTO(listaCidade);
+	}
+
+	private List<CidadeDTO> cidadesToCidadeDTO(List<Cidade> listaCidade) {
+		return listaCidade.stream().map(cidade -> cidadeToCidadeDTO(cidade)).collect(Collectors.toList());
+	}
+
+	private CidadeDTO cidadeToCidadeDTO(Cidade cidade) {
+		return modelMapper.map(cidade, CidadeDTO.class);
 	}
 
 	@GetMapping("/{cidadeId}")
-	public Cidade buscar(@PathVariable Long cidadeId) {
-		return cadastroCidadeService.buscarOuFalhar(cidadeId);
+	public CidadeDTO buscar(@PathVariable Long cidadeId) {
+		return cidadeToCidadeDTO(cadastroCidadeService.buscarOuFalhar(cidadeId));
 	}
 
 	@PostMapping // post não são indempotente, cada post terá efeito colateral que será a
 					// persistência
 	@ResponseStatus(HttpStatus.CREATED)
-	public Cidade salvar(@RequestBody Cidade cidade) {
+	public CidadeDTO salvar(@RequestBody Cidade cidade) {
 		try {
-			return cadastroCidadeService.salvar(cidade);
+			return cidadeToCidadeDTO(cadastroCidadeService.salvar(cidade));
 		} catch (EntidadeNaoEncontradaException e) {
 			throw new NegocioException(e.getMessage(), e);
 		}
 	}
 
 	@PutMapping("/{cidadeId}") // atualização de um recurso
-	public Cidade atualizar(@PathVariable Long cidadeId, @RequestBody @Valid Cidade cidade) {
+	public CidadeDTO atualizar(@PathVariable Long cidadeId, @RequestBody @Valid Cidade cidade) {
 		Cidade cidadeAtual = cadastroCidadeService.buscarOuFalhar(cidadeId);
 		BeanUtils.copyProperties(cidade, cidadeAtual, "id");
 		try {
-			return cadastroCidadeService.salvar(cidadeAtual);
+			return cidadeToCidadeDTO(cadastroCidadeService.salvar(cidade));
 		} catch (EntidadeNaoEncontradaException e) {
 			throw new NegocioException(e.getMessage(), e);
 		}

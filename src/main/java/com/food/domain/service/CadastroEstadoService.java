@@ -15,7 +15,7 @@ import com.food.domain.repository.EstadoRepository;
 public class CadastroEstadoService {
 	
 //	private static final String MSG_ESTADO_NAO_ENCONTRADO = "Não existe um cadastro de estado com código %d";
-	private static final String MSG_ESTADO_EM_USO = "Estado de código %d não pode ser removida, pois está em uso";
+	private static final String MSG_ESTADO_EM_USO = "EstadoDTO de código %d não pode ser removida, pois está em uso";
 	@Autowired
 	private EstadoRepository estadoRepository;
 

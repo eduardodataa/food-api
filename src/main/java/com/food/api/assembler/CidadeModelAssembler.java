@@ -9,7 +9,7 @@ import com.food.api.model.RestauranteDTO;
 import com.food.domain.model.Restaurante;
 
 @Component
-public class RestauranteModelAssembler {
+public class CidadeModelAssembler {
 	
 	@Autowired
 	private ModelMapper modelMapper;

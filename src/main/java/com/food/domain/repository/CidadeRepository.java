@@ -6,10 +6,10 @@ import com.food.domain.model.Cidade;
 
 public interface CidadeRepository extends JpaRepository<Cidade, Long> {
 	
-//	List<Cidade> listar();
-//	Cidade buscar(Long id);
-//	Cidade salvar(Cidade cidade);
-//	void remover(Cidade cidade);
+//	List<CidadeDTO> listar();
+//	CidadeDTO buscar(Long id);
+//	CidadeDTO salvar(CidadeDTO cidade);
+//	void remover(CidadeDTO cidade);
 //	void remover(Long cidadeId) throws EmptyResultDataAccessException;
 
 }
