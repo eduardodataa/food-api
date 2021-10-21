@@ -1,9 +1,11 @@
 package com.food.api.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.food.api.model.EstadoDTO;
 import com.food.domain.model.Estado;
 import com.food.domain.repository.EstadoRepository;
 import com.food.domain.service.CadastroEstadoService;
@@ -28,22 +31,36 @@ public class EstadoController {
 
 	@Autowired
 	private EstadoRepository estadoRepository;
+	
 	@Autowired
 	private CadastroEstadoService cadastroEstadoService;
+
+	@Autowired
+	private ModelMapper modelMapper;
 	
 	@GetMapping
-	public List<Estado> listar(){
-		return estadoRepository.findAll();
+	public List<EstadoDTO> listar(){
+		return estadosToEstadoDTO(estadoRepository.findAll());
 	}
 	
 	//atualizar estado
 	@PutMapping("/{estadoId}")
 	@ResponseStatus(HttpStatus.OK)
-	public Estado atualizar(@PathVariable Long estadoId, @RequestBody @Valid Estado estado) {
+	public EstadoDTO atualizar(@PathVariable Long estadoId, @RequestBody @Valid Estado estado) {
 		Estado estadoAtual = cadastroEstadoService.buscarOuFalhar(estadoId);
 		BeanUtils.copyProperties(estado,estadoAtual , "id");
-		return cadastroEstadoService.salvar(estadoAtual);
+		return estadoToEstadoDTO( cadastroEstadoService.salvar(estadoAtual));
 	}
+	
+
+	private List<EstadoDTO> estadosToEstadoDTO(List<Estado> listaEstados) {
+		return listaEstados.stream().map(estado -> estadoToEstadoDTO(estado)).collect(Collectors.toList());
+	}
+
+	private EstadoDTO estadoToEstadoDTO(Estado cidade) {
+		return modelMapper.map(cidade, EstadoDTO.class);
+	}
+
 	
 	@PostMapping
 	public ResponseEntity<?> salvar(@RequestBody Estado estado) {
