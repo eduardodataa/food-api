@@ -123,6 +123,18 @@ public class RestauranteController {
 		
 		return atualizar(restauranteId, modelMapper.map(restauranteAtual, RestauranteInput.class));
 	}
+	
+	@PutMapping("/{restauranteId}/ativo")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void ativar(@PathVariable Long restauranteId) {
+		cadastroRestauranteService.ativar(restauranteId);
+	}
+	
+	@DeleteMapping("/{restauranteId}/ativo")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void inativar(@PathVariable Long restauranteId) {
+		cadastroRestauranteService.inativar(restauranteId);
+	}
 
 	private void merge(Map<String, Object> camposOrigem, Restaurante restauranteDestino, HttpServletRequest httpServletRequest) {
 		try {
@@ -150,7 +162,7 @@ public class RestauranteController {
 			ServletServerHttpRequest servletServerHttpRequest = new ServletServerHttpRequest(httpServletRequest);
 			throw new HttpMessageNotReadableException(e.getMessage(), rootCause, servletServerHttpRequest);
 		}
-		
-		
 	}
+	
+	
 }
