@@ -22,5 +22,6 @@ public class RestauranteDTO {
 	 * retorna objeto aninhado
 	 */
 	private CozinhaDTO cozinha;
+	private Boolean ativo;
 
 }

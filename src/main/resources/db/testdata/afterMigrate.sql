@@ -54,11 +54,11 @@ insert into algafood.estado (id, nome) values (2,'São Paulo');
 insert into algafood.cidade (id, nome, estado_id) values (1,'Florianópolis', 1);
 insert into algafood.cidade (id, nome, estado_id) values (2,'São José', 1);
 
-insert into algafood.restaurante (nome, cozinha_id, taxa_frete, data_atualizacao, data_cadastro) values ('Rocco', 4, 20,utc_timestamp, utc_timestamp);
-insert into algafood.restaurante (nome, cozinha_id, taxa_frete, data_atualizacao, data_cadastro) values ('La Boheme', 4, 20,utc_timestamp, utc_timestamp);
-INSERT INTO algafood.restaurante (data_atualizacao, data_cadastro, endereco_bairro, endereco_cep, endereco_complemento, endereco_logradouro, endereco_numero, nome, taxa_frete, cozinha_id, endereco_cidade_id) VALUES (utc_timestamp, utc_timestamp, 'trindade', '88036200', 'casa', 'Rua',  '114', 'Trindog', 0, 1, 1);
+insert into algafood.restaurante (nome, cozinha_id, taxa_frete, data_atualizacao, data_cadastro, ativo) values ('Rocco', 4, 20,utc_timestamp, utc_timestamp, true);
+insert into algafood.restaurante (nome, cozinha_id, taxa_frete, data_atualizacao, data_cadastro, ativo) values ('La Boheme', 4, 20,utc_timestamp, utc_timestamp, true);
+INSERT INTO algafood.restaurante (data_atualizacao, data_cadastro, endereco_bairro, endereco_cep, endereco_complemento, endereco_logradouro, endereco_numero, nome, taxa_frete, cozinha_id, endereco_cidade_id, ativo) VALUES (utc_timestamp, utc_timestamp, 'trindade', '88036200', 'casa', 'Rua',  '114', 'Trindog', 0, 1, 1, true);
 	
-INSERT INTO algafood.restaurante (data_atualizacao, data_cadastro, endereco_bairro, endereco_cep, endereco_complemento, endereco_logradouro, endereco_numero, nome, taxa_frete, cozinha_id, endereco_cidade_id) VALUES (utc_timestamp, utc_timestamp, 'Vargem Grande', '88036100', 'casa', 'SC 401',  '114', 'Jun', 0, 1, 1);
+INSERT INTO algafood.restaurante (data_atualizacao, data_cadastro, endereco_bairro, endereco_cep, endereco_complemento, endereco_logradouro, endereco_numero, nome, taxa_frete, cozinha_id, endereco_cidade_id, ativo) VALUES (utc_timestamp, utc_timestamp, 'Vargem Grande', '88036100', 'casa', 'SC 401',  '114', 'Jun', 0, 1, 1, true);
 
 
 insert into algafood.permissao values (1,'Permissao geral', 'Acesso a todas as funcionalidades');

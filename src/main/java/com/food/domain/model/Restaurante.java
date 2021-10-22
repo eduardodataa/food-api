@@ -88,4 +88,7 @@ public class Restaurante {
 	private List<Produto> produtos = new ArrayList<>();
 	
 	
+	private Boolean ativo = true;
+	
+	
 }
