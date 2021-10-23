@@ -1,0 +1,61 @@
+package com.food.domain.service;
+
+import javax.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.food.api.model.input.UsuarioInputSenha;
+import com.food.domain.exception.EntidadeEmUsoException;
+import com.food.domain.exception.NegocioException;
+import com.food.domain.exception.UsuarioNaoEncontradoException;
+import com.food.domain.model.Usuario;
+import com.food.domain.repository.UsuarioRepository;
+
+@Service
+public class CadastroUsuarioService {
+	
+	private static final String MSG_USUARIO_EM_USO = "UsuarioInput de código %d não pode ser removida, pois está em uso";
+	private static final String MSG_SENHA_VALIDA = "A senha está incorreta";
+	@Autowired
+	private UsuarioRepository usuarioRepository;
+
+	@Transactional
+	public Usuario salvar(Usuario usuario) {
+		return usuarioRepository.save(usuario);
+	}
+
+	@Transactional
+	public void excluir(Long usuarioId)  {
+		try {
+			usuarioRepository.deleteById(usuarioId);
+			usuarioRepository.flush();
+		} catch (EmptyResultDataAccessException e) {
+			throw new UsuarioNaoEncontradoException(usuarioId);
+		}catch (DataIntegrityViolationException e) {
+			throw new EntidadeEmUsoException(
+					String.format(MSG_USUARIO_EM_USO, usuarioId));
+		}
+	}
+	
+	public Usuario buscarOuFalhar(Long usuarioId) {
+		return usuarioRepository.findById(usuarioId)
+				.orElseThrow( () -> new UsuarioNaoEncontradoException(usuarioId));
+	}
+
+	public Usuario atualizarSenha(Long usuarioId, @Valid UsuarioInputSenha usuarioInputSenha) {
+		Usuario usuario = buscarOuFalhar(usuarioId);
+		
+		if(!usuario.getSenha().equals(usuarioInputSenha.getSenhaAtual())){
+			throw new NegocioException(MSG_SENHA_VALIDA);
+		}
+		usuario.setSenha(usuarioInputSenha.getSenhaAtual());
+		
+		return usuario;
+		
+	}
+
+}
