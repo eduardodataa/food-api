@@ -2,10 +2,14 @@ package com.food.api.exceptionhandler;
 
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.TypeMismatchException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,6 +42,9 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 	
 	private static final String ERRO_INTERNO_INSPERADO_NO_SISTEMA_ENTRE_EM_CONTATO_COM_O_ADMINISTRADOR_DO_SISTEMA = "Ocorreu um erro interno insperado no sistema. Entre em contato com o administrador do sistema";
 
+	@Autowired
+	MessageSource messageSource;
+	
 	/**
 	 * método que trata mensagens não compreendidas pela API
 	 */
@@ -102,12 +109,18 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 		ProblemType problemType = ProblemType.DADOS_INVALIDOS;
 		String detailMessage = "Um ou campos estão inválidos. Faça o preenchimento correto e tente novamente.";
 		
+		
 		BindingResult bindingResult = ex.getBindingResult();
 		List<Problem.Field> problemFields = bindingResult.getFieldErrors().stream()
-				.map(fieldErro -> Problem.Field.builder()
+				.map(fieldErro -> {
+				
+					String message =  messageSource.getMessage(fieldErro, LocaleContextHolder.getLocale());
+					return Problem.Field.builder()
 						.name(fieldErro.getField())
-						.userMessage(fieldErro.getDefaultMessage())
-						.build())
+//						.userMessage(fieldErro.getDefaultMessage())
+						.userMessage(message)
+						.build();
+				})
 				.collect(Collectors.toList());
 		
 		Problem problem = createProblemBuilder(status, problemType, detailMessage, detailMessage)

@@ -61,8 +61,8 @@ class CadastroCozinhaIntegrationTestsIT {
 	@Test
 	public void deve_falhar_cozinha_em_uso() {
 		
-		DataIntegrityViolationException exception = 
-				Assertions.assertThrows(DataIntegrityViolationException.class, () ->{
+		EntidadeEmUsoException exception = 
+				Assertions.assertThrows(EntidadeEmUsoException.class, () ->{
 					cadastroCozinhaService.excluir(1l);					
 				});
 		
@@ -73,8 +73,8 @@ class CadastroCozinhaIntegrationTestsIT {
 	@Test
 	public void remover_cozinha() {
 		
-		DataIntegrityViolationException exception = 
-				Assertions.assertThrows(DataIntegrityViolationException.class, () ->{
+		EntidadeEmUsoException exception = 
+				Assertions.assertThrows(EntidadeEmUsoException.class, () ->{
 					cadastroCozinhaService.excluir(4l);					
 				});
 		

@@ -32,6 +32,7 @@ import com.food.api.assembler.RestauranteInputDesassembler;
 import com.food.api.assembler.RestauranteModelAssembler;
 import com.food.api.model.RestauranteDTO;
 import com.food.api.model.input.RestauranteInput;
+import com.food.domain.exception.CidadeNaoEncontradaException;
 import com.food.domain.exception.CozinhaNaoEncontradaException;
 import com.food.domain.exception.EntidadeNaoEncontradaException;
 import com.food.domain.exception.NegocioException;
@@ -82,7 +83,7 @@ public class RestauranteController {
 	public RestauranteDTO salvar(@RequestBody @Valid RestauranteInput restauranteInput) {
 		try {
 			return restauranteModelAssembler.toModel(cadastroRestauranteService.salvar(restauranteInputDesassembler.toDomainModel(restauranteInput)));
-		} catch (CozinhaNaoEncontradaException e) {
+		} catch (CozinhaNaoEncontradaException | CidadeNaoEncontradaException e) {
 			throw new NegocioException(e.getMessage());
 		}
 	}

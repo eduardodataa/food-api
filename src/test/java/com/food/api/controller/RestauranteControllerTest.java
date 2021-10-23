@@ -23,9 +23,14 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.util.ResourceUtils;
 import org.springframework.util.StreamUtils;
 
+import com.food.domain.model.Cidade;
 import com.food.domain.model.Cozinha;
+import com.food.domain.model.Endereco;
+import com.food.domain.model.Estado;
 import com.food.domain.model.Restaurante;
+import com.food.domain.repository.CidadeRepository;
 import com.food.domain.repository.CozinhaRepository;
+import com.food.domain.repository.EstadoRepository;
 import com.food.domain.repository.RestauranteRepository;
 import com.food.util.DatabaseCleaner;
 
@@ -50,11 +55,19 @@ class RestauranteControllerTest {
 	CozinhaRepository cozinhaRepository;
 	@Autowired
 	RestauranteRepository restauranteRepository;
+
+	@Autowired
+	CidadeRepository cidadeRepository;
+	
+	@Autowired
+	EstadoRepository estadoRepository;
+	
 	List<Restaurante> listaCozinhas = new ArrayList<>();
 	private static final String CORPO_REST_1_SALVAR = getResource("/json/correto/restaurante1.json");
 	private static final String CORPO_REST_COZINHA_INEXISTENTE = getResource("/json/incorreto/restaurante1_cozinha_inexistente.json");
 	private static final String CORPO_REST_SEM_COZINHA = getResource("/json/incorreto/restaurante_sem_cozinha.json");
 	private static final String VIOLACAO_DE_REGRA_DE_NEGOCIO_PROBLEM_TYPE = "Violação de regra de negócio";
+	private static final String DADOS_INVALIDOS_PROBLEM_TYPE = "Dados Inválidos";
 
 
 	@BeforeEach
@@ -70,12 +83,32 @@ class RestauranteControllerTest {
 		Cozinha cozinha1 = new Cozinha();
 		cozinha1.setNome("Tailandesa");
 		cozinhaRepository.save(cozinha1);
+		
+		Estado estado = new Estado();
+		estado.setNome("Paraná");
+		estado.setId(1l);
+		estadoRepository.save(estado);
+		
+		Cidade cidade = new Cidade();
+		cidade.setEstado(estado);
+		cidade.setNome("Londrina");
+		cidade.setId(1l);
+		cidadeRepository.save(cidade);
 
 		
 		Restaurante restaurante = new Restaurante();
 		restaurante.setNome("Uncle Joe");
 		restaurante.setTaxaFrete(new BigDecimal(10));
 		restaurante.setCozinha(cozinha1);
+		
+		Endereco endereco = new Endereco();
+		endereco.setBairro("Santa Mônica");
+		endereco.setCep("88036558");
+		endereco.setCidade(cidade);
+		endereco.setLogradouro("Rua");
+		endereco.setNumero("110");
+		restaurante.setEndereco(endereco);
+		
 		restauranteRepository.save(restaurante);
 
 		cozinha1 = new Cozinha();
@@ -129,7 +162,7 @@ class RestauranteControllerTest {
 			.post()
 		.then()
 		.statusCode(HttpStatus.BAD_REQUEST.value())
-		.body("title", equalTo(VIOLACAO_DE_REGRA_DE_NEGOCIO_PROBLEM_TYPE));
+		.body("title", equalTo(DADOS_INVALIDOS_PROBLEM_TYPE));
 	}
 	
 	@Test

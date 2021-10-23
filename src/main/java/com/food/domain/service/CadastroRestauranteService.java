@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.food.domain.exception.EntidadeEmUsoException;
 import com.food.domain.exception.RestauranteNaoEncontradoException;
+import com.food.domain.model.Cidade;
 import com.food.domain.model.Cozinha;
 import com.food.domain.model.Restaurante;
 import com.food.domain.repository.RestauranteRepository;
@@ -25,6 +26,9 @@ public class CadastroRestauranteService {
 	@Autowired
 	private CadastroCozinhaService cadastroCozinhaService;
 	
+	@Autowired
+	private CadastroCidadeService cadastroCidadeService;
+	
 	/**
 	 * boa prática anotar com @transaction os métodos públicos
 	 * @param restaurante
@@ -34,7 +38,11 @@ public class CadastroRestauranteService {
 	public Restaurante salvar(Restaurante restaurante) {
 		try {
 			Cozinha cozinha = cadastroCozinhaService.buscarOuFalhar(restaurante.getCozinha().getId());
+			Cidade cidade = cadastroCidadeService.buscarOuFalhar(restaurante.getEndereco().getCidade().getId());
+			
 			restaurante.setCozinha(cozinha);
+			restaurante.getEndereco().setCidade(cidade);
+			
 			return restauranteRepository.save(restaurante);
 		} catch (Exception e) {
 			throw e;

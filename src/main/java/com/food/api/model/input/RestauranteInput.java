@@ -30,5 +30,9 @@ public class RestauranteInput {
 	@ConvertGroup(from = Default.class, to = Groups.CozinhaId.class) //converta group default p/ cadastros restaurante.class
 	@Valid // valida as propriedades de cozinha
 	private CozinhaDTO cozinha;
+	
+	@Valid
+	@NotNull
+	private EnderecoInput endereco;
 
 }
