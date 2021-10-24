@@ -10,7 +10,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.food.api.model.input.UsuarioInputSenha;
+import com.food.api.model.input.SenhaInput;
 import com.food.domain.exception.EntidadeEmUsoException;
 import com.food.domain.exception.NegocioException;
 import com.food.domain.exception.UsuarioNaoEncontradoException;
@@ -59,16 +59,22 @@ public class CadastroUsuarioService {
 				.orElseThrow( () -> new UsuarioNaoEncontradoException(usuarioId));
 	}
 
-	public Usuario atualizarSenha(Long usuarioId, @Valid UsuarioInputSenha usuarioInputSenha) {
-		Usuario usuario = buscarOuFalhar(usuarioId);
-		
-		if(!usuario.getSenha().equals(usuarioInputSenha.getSenhaAtual())){
-			throw new NegocioException(MSG_SENHA_VALIDA);
+	@Transactional
+	public Usuario atualizarSenha(Long usuarioId, @Valid SenhaInput senhaInput) {
+		try {
+			Usuario usuario = buscarOuFalhar(usuarioId);
+			
+			if(!usuario.getSenha().equals(senhaInput.getSenhaAtual())){
+				throw new NegocioException(MSG_SENHA_VALIDA);
+			}
+			usuario.setSenha(senhaInput.getSenhaAtual());
+			usuarioRepository.flush();
+			return usuario;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw e;
 		}
-		usuario.setSenha(usuarioInputSenha.getSenhaAtual());
-		
-		return usuario;
-		
 	}
 
 }

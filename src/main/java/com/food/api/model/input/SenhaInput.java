@@ -5,7 +5,7 @@ import javax.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
-public class UsuarioInputSenha {
+public class SenhaInput {
 
 
 	private Long id;

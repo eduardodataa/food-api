@@ -21,7 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.food.api.model.UsuarioDTO;
 import com.food.api.model.input.UsuarioInput;
-import com.food.api.model.input.UsuarioInputSenha;
+import com.food.api.model.input.UsuarioSenhaInput;
+import com.food.api.model.input.SenhaInput;
 import com.food.domain.exception.NegocioException;
 import com.food.domain.model.Usuario;
 import com.food.domain.repository.UsuarioRepository;
@@ -56,11 +57,9 @@ public class UsuarioController {
 	
 	//atualizar usuario
 	@PutMapping("/{usuarioId}/atualizarSenha")
-	@ResponseStatus(HttpStatus.CREATED)
-	public UsuarioDTO atualizar(@PathVariable Long usuarioId, @RequestBody @Valid UsuarioInputSenha usuario) {
-		Usuario usuarioAtual = cadastroUsuarioService.atualizarSenha(usuarioId, usuario);
-		BeanUtils.copyProperties(usuario,usuarioAtual , "id");
-		return usuarioToUsuarioDTO( cadastroUsuarioService.salvar(usuarioAtual));
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void atualizar(@PathVariable Long usuarioId, @RequestBody @Valid SenhaInput usuario) {
+		cadastroUsuarioService.atualizarSenha(usuarioId, usuario);
 	}
 	
 
@@ -75,7 +74,7 @@ public class UsuarioController {
 	
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public UsuarioDTO salvar(@RequestBody @Valid UsuarioInput usuarioInput) {
+	public UsuarioDTO salvar(@RequestBody @Valid UsuarioSenhaInput usuarioInput) {
 		try {
 			Usuario usuario = modelMapper.map(usuarioInput, Usuario.class);
 //			BeanUtils.copyProperties(usuarioInput,usuario);
