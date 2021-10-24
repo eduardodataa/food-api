@@ -1,5 +1,7 @@
 package com.food.domain.service;
 
+import java.util.Optional;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,9 +24,20 @@ public class CadastroUsuarioService {
 	private static final String MSG_SENHA_VALIDA = "A senha está incorreta";
 	@Autowired
 	private UsuarioRepository usuarioRepository;
+	
+//	@Autowired
+//	private EntityManager entityManager;
 
 	@Transactional
 	public Usuario salvar(Usuario usuario) {
+		usuarioRepository.detach(usuario);
+		
+		Optional<Usuario> usuarioExistente = usuarioRepository.findByEmail(usuario.getEmail());
+		
+		if(usuarioExistente.isPresent() && usuarioExistente.get().equals(usuario)) {
+			throw new NegocioException(
+					String.format("Já existe usuário com este e-mail", usuario.getEmail()));
+		}
 		return usuarioRepository.save(usuario);
 	}
 

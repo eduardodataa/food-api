@@ -8,17 +8,13 @@ import lombok.Data;
 @Data
 public class UsuarioInput {
 
-
 	private Long id;
-
 	
 	@NotBlank
 	private String nome;
-
 	
 	@NotBlank
 	@Email
 	private String email;
 
-//	private List<Grupo> grupos;
 }

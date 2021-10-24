@@ -14,4 +14,6 @@ public interface CustomJpaRepository<T, ID> extends JpaRepository<T, ID> {
 	 */
 	public Optional<T> buscaPrimeiro();
 	
+	void detach (T e);
+	
 }

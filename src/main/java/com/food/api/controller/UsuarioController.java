@@ -9,7 +9,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.food.api.model.UsuarioDTO;
 import com.food.api.model.input.UsuarioInput;
 import com.food.api.model.input.UsuarioInputSenha;
+import com.food.domain.exception.NegocioException;
 import com.food.domain.model.Usuario;
 import com.food.domain.repository.UsuarioRepository;
 import com.food.domain.service.CadastroUsuarioService;
@@ -74,14 +74,16 @@ public class UsuarioController {
 
 	
 	@PostMapping
-	public ResponseEntity<?> salvar(@RequestBody UsuarioInput usuarioInput) {
+	@ResponseStatus(HttpStatus.CREATED)
+	public UsuarioDTO salvar(@RequestBody @Valid UsuarioInput usuarioInput) {
 		try {
-			Usuario usuario = new Usuario();
-			BeanUtils.copyProperties(usuarioInput,usuario);
-			usuario = cadastroUsuarioService.salvar(usuario);
-			return ResponseEntity.status(HttpStatus.CREATED).body(usuarioToUsuarioDTO(usuario));
+			Usuario usuario = modelMapper.map(usuarioInput, Usuario.class);
+//			BeanUtils.copyProperties(usuarioInput,usuario);
+//			usuario = cadastroUsuarioService.salvar(usuario);
+//			return ResponseEntity.status(HttpStatus.CREATED).body(usuarioToUsuarioDTO(usuario));
+			return usuarioToUsuarioDTO(cadastroUsuarioService.salvar(usuario));
 		} catch (Exception e) {
-			return ResponseEntity.badRequest().body("Erro ao salvar: " + e.getMessage());
+			throw new NegocioException(e.getMessage());
 		}
 	}
 	
