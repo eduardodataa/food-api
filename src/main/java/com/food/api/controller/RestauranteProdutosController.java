@@ -5,13 +5,15 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import javax.validation.Valid;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -39,9 +41,6 @@ public class RestauranteProdutosController {
 	private ProdutoRepository produtoRepository;
 	
 	@Autowired
-	private RestauranteRepository restauranteRepository;
-
-	@Autowired
 	private ModelMapper modelMapper;
 	
 	@GetMapping
@@ -54,6 +53,15 @@ public class RestauranteProdutosController {
 	public ProdutoDTO buscar(@PathVariable Long restauranteId, @PathVariable Long produtoId) {
 		Optional<Produto> produtoOptional = produtoRepository.findById(restauranteId, produtoId);
 		return produtoToProdutoDTO(produtoOptional.orElseThrow( () -> new ProdutoNaoEncontradoException(produtoId))); //produtosToProdutosDTO(restaurante.getProdutos());
+	}
+	
+	@PostMapping
+	@ResponseStatus(HttpStatus.CREATED)
+	public ProdutoDTO salvar(@PathVariable Long restauranteId, @RequestBody @Valid ProdutoDTO produtoDTO) {
+		Restaurante restaurante = restauranteService.buscarOuFalhar(restauranteId);
+		Produto produto = produtoDTOToProduto(produtoDTO);
+		produto.setRestaurante(restaurante);
+		return produtoToProdutoDTO(produtoService.salvar(produto));
 	}
 //	
 //	@GetMapping("/{produtoId}")
@@ -80,5 +88,9 @@ public class RestauranteProdutosController {
 
 	private ProdutoDTO produtoToProdutoDTO(Produto produto) {
 		return modelMapper.map(produto, ProdutoDTO.class);
+	}
+	
+	private Produto produtoDTOToProduto(ProdutoDTO produtoDTO) {
+		return modelMapper.map(produtoDTO, Produto.class);
 	}
 }

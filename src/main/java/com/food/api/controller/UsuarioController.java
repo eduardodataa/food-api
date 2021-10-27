@@ -20,9 +20,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.food.api.model.UsuarioDTO;
+import com.food.api.model.input.SenhaInput;
 import com.food.api.model.input.UsuarioInput;
 import com.food.api.model.input.UsuarioSenhaInput;
-import com.food.api.model.input.SenhaInput;
 import com.food.domain.exception.NegocioException;
 import com.food.domain.model.Usuario;
 import com.food.domain.repository.UsuarioRepository;

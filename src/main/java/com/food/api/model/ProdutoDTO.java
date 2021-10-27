@@ -2,9 +2,8 @@ package com.food.api.model;
 
 import java.math.BigDecimal;
 
-import javax.persistence.Entity;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
 
 import lombok.Getter;
@@ -14,6 +13,7 @@ import lombok.Setter;
 @Setter
 public class ProdutoDTO {
 	
+	private Long id;
 	
 	@NotBlank
 	private String nome;
@@ -21,10 +21,11 @@ public class ProdutoDTO {
 	@NotBlank
 	private String descricao;
 
+	@NotNull
 	@PositiveOrZero
 	private BigDecimal preco;
 
-	@NotEmpty
-	private boolean ativo;
+	@NotNull
+	private Boolean ativo;
 
 }

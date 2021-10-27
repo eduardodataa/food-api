@@ -2,7 +2,6 @@ package com.food.api.exceptionhandler;
 
 import java.time.OffsetDateTime;
 import java.util.List;
-import java.util.Locale;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
