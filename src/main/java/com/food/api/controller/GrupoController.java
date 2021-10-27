@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.food.api.model.GrupoDTO;
 import com.food.domain.model.Grupo;
 import com.food.domain.repository.GrupoRepository;
-import com.food.domain.service.CadastroGrupoService;
+import com.food.domain.service.GrupoService;
 
 @RestController
 @RequestMapping("/grupos")
@@ -33,7 +33,7 @@ public class GrupoController {
 	private GrupoRepository grupoRepository;
 	
 	@Autowired
-	private CadastroGrupoService cadastroGrupoService;
+	private GrupoService grupoService;
 
 	@Autowired
 	private ModelMapper modelMapper;
@@ -47,9 +47,9 @@ public class GrupoController {
 	@PutMapping("/{grupoId}")
 	@ResponseStatus(HttpStatus.OK)
 	public GrupoDTO atualizar(@PathVariable Long grupoId, @RequestBody @Valid Grupo grupo) {
-		Grupo grupoAtual = cadastroGrupoService.buscarOuFalhar(grupoId);
+		Grupo grupoAtual = grupoService.buscarOuFalhar(grupoId);
 		BeanUtils.copyProperties(grupo,grupoAtual , "id");
-		return grupoToGrupoDTO( cadastroGrupoService.salvar(grupoAtual));
+		return grupoToGrupoDTO( grupoService.salvar(grupoAtual));
 	}
 	
 
@@ -65,7 +65,7 @@ public class GrupoController {
 	@PostMapping
 	public ResponseEntity<?> salvar(@RequestBody Grupo grupo) {
 		try {
-			grupo = cadastroGrupoService.salvar(grupo);
+			grupo = grupoService.salvar(grupo);
 			return ResponseEntity.status(HttpStatus.CREATED).body(grupo);
 		} catch (Exception e) {
 			return ResponseEntity.badRequest().body("Erro ao salvar: " + e.getMessage());
@@ -75,6 +75,6 @@ public class GrupoController {
 	@DeleteMapping("/{grupoId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void excluir(@PathVariable Long grupoId){
-		cadastroGrupoService.excluir(grupoId);
+		grupoService.excluir(grupoId);
 	}
 }

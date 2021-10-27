@@ -27,7 +27,7 @@ insert into forma_pagamento values (3,'PIX');
 INSERT INTO restaurante_forma_pagamento (restaurante_id, forma_pagamento_id) VALUES(1, 1), (1, 2), (1, 3), (2, 1);
 
 
-INSERT INTO produto (ativo, descricao, nome, preco, restaurantes_id) VALUES(1, 'Peixa salmão', 'Sashimi', 10, 4);
+INSERT INTO produto (ativo, descricao, nome, preco, restaurante_id) VALUES(1, 'Peixa salmão', 'Sashimi', 10, 4);
 
 
 INSERT INTO usuario (data_cadastro, email, nome, senha) VALUES(utc_timestamp, 'edu@edu.com', 'Eduardo Cordeiro', '123');

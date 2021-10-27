@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.food.api.model.FormaPagamentoDTO;
 import com.food.domain.model.FormaPagamento;
 import com.food.domain.repository.FormaPagamentoRepository;
-import com.food.domain.service.CadastroFormaDePagamentoService;
+import com.food.domain.service.FormaDePagamentoService;
 
 @RestController
 @RequestMapping("/formaPagamento")
@@ -33,7 +33,7 @@ public class FormaPagamentoController {
 	private FormaPagamentoRepository formaPagamentoRepository;
 	
 	@Autowired
-	private CadastroFormaDePagamentoService cadastroFormaDePagamentoService;
+	private FormaDePagamentoService formaDePagamentoService;
 
 	@Autowired
 	private ModelMapper modelMapper;
@@ -46,9 +46,9 @@ public class FormaPagamentoController {
 	@PutMapping("/{formaPagamentoId}")
 	@ResponseStatus(HttpStatus.OK)
 	public FormaPagamentoDTO atualizar(@PathVariable Long formaPagamentoId, @RequestBody @Valid FormaPagamento formaPagamento) {
-		FormaPagamento formaPagamentoAtual = cadastroFormaDePagamentoService.buscarOuFalhar(formaPagamentoId);
+		FormaPagamento formaPagamentoAtual = formaDePagamentoService.buscarOuFalhar(formaPagamentoId);
 		BeanUtils.copyProperties(formaPagamento,formaPagamentoAtual , "id");
-		return formaPagamentoToFormaPagamentoDTO( cadastroFormaDePagamentoService.salvar(formaPagamentoAtual));
+		return formaPagamentoToFormaPagamentoDTO( formaDePagamentoService.salvar(formaPagamentoAtual));
 	}
 	
 
@@ -64,7 +64,7 @@ public class FormaPagamentoController {
 	@PostMapping
 	public ResponseEntity<?> salvar(@RequestBody FormaPagamento formaPagamento) {
 		try {
-			formaPagamento = cadastroFormaDePagamentoService.salvar(formaPagamento);
+			formaPagamento = formaDePagamentoService.salvar(formaPagamento);
 			return ResponseEntity.status(HttpStatus.CREATED).body(formaPagamento);
 		} catch (Exception e) {
 			return ResponseEntity.badRequest().body("Erro ao salvar: " + e.getMessage());
@@ -74,6 +74,6 @@ public class FormaPagamentoController {
 	@DeleteMapping("/{formaPagamentoId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void excluir(@PathVariable Long formaPagamentoId){
-		cadastroFormaDePagamentoService.excluir(formaPagamentoId);
+		formaDePagamentoService.excluir(formaPagamentoId);
 	}
 }

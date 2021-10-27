@@ -14,7 +14,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.food.domain.exception.EntidadeEmUsoException;
 import com.food.domain.model.Cozinha;
-import com.food.domain.service.CadastroCozinhaService;
+import com.food.domain.service.CozinhaService;
 
 /**
  * Classe com final IT é de teste de integração. Será executado em outro momento (quando se colocar a palavra 'verify' nos goals do projeto).
@@ -27,7 +27,7 @@ import com.food.domain.service.CadastroCozinhaService;
 class CadastroCozinhaIntegrationTestsIT {
 
 	@Autowired
-	private CadastroCozinhaService cadastroCozinhaService;
+	private CozinhaService cozinhaService;
 	
 	@Test
 	void testarCadastroCozinhaComSucesso() {
@@ -36,7 +36,7 @@ class CadastroCozinhaIntegrationTestsIT {
 		novaCozinha.setNome("Chilena");
 		//acao
 		
-		novaCozinha = cadastroCozinhaService.salvar(novaCozinha);
+		novaCozinha = cozinhaService.salvar(novaCozinha);
 		
 		//validação
 		assertThat(novaCozinha).isNotNull();
@@ -51,7 +51,7 @@ class CadastroCozinhaIntegrationTestsIT {
 		
 		ConstraintViolationException exception = 
 				Assertions.assertThrows(ConstraintViolationException.class, () ->{
-					cadastroCozinhaService.salvar(novaCozinha);					
+					cozinhaService.salvar(novaCozinha);					
 				});
 		
 		assertThat(exception).isNotNull();
@@ -63,7 +63,7 @@ class CadastroCozinhaIntegrationTestsIT {
 		
 		EntidadeEmUsoException exception = 
 				Assertions.assertThrows(EntidadeEmUsoException.class, () ->{
-					cadastroCozinhaService.excluir(1l);					
+					cozinhaService.excluir(1l);					
 				});
 		
 		assertThat(exception).isNotNull();
@@ -75,7 +75,7 @@ class CadastroCozinhaIntegrationTestsIT {
 		
 		EntidadeEmUsoException exception = 
 				Assertions.assertThrows(EntidadeEmUsoException.class, () ->{
-					cadastroCozinhaService.excluir(4l);					
+					cozinhaService.excluir(4l);					
 				});
 		
 		assertThat(exception).isNotNull();

@@ -13,18 +13,18 @@ import com.food.domain.model.Estado;
 import com.food.domain.repository.CidadeRepository;
 
 @Service
-public class CadastroCidadeService {
+public class CidadeService {
 	
 	private static final String MSG_CIDADE_EM_USO = "CidadeDTO de código %d não pode ser removida, pois está em uso";
 //	private static final String MSG_CIDADE_NAO_ENCONTRADA = "Não existe um cadastro de cidade com código %d";
 	@Autowired
 	private CidadeRepository cidadeRepository;
 	@Autowired
-	private CadastroEstadoService cadastroEstadoService;
+	private EstadoService estadoService;
 
 	@Transactional
 	public Cidade salvar(Cidade cidade) {
-		Estado estado = cadastroEstadoService.buscarOuFalhar(cidade.getEstado().getId());
+		Estado estado = estadoService.buscarOuFalhar(cidade.getEstado().getId());
 		cidade.setEstado(estado);
 		return cidadeRepository.save(cidade);
 	}

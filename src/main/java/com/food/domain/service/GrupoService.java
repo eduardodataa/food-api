@@ -12,7 +12,7 @@ import com.food.domain.model.Grupo;
 import com.food.domain.repository.GrupoRepository;
 
 @Service
-public class CadastroGrupoService {
+public class GrupoService {
 	
 	private static final String MSG_GRUPO_EM_USO = "Grupo de código %d não pode ser removida, pois está em uso";
 	@Autowired

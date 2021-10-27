@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.food.api.model.EstadoDTO;
 import com.food.domain.model.Estado;
 import com.food.domain.repository.EstadoRepository;
-import com.food.domain.service.CadastroEstadoService;
+import com.food.domain.service.EstadoService;
 
 @RestController
 @RequestMapping("/estados")
@@ -33,7 +33,7 @@ public class EstadoController {
 	private EstadoRepository estadoRepository;
 	
 	@Autowired
-	private CadastroEstadoService cadastroEstadoService;
+	private EstadoService estadoService;
 
 	@Autowired
 	private ModelMapper modelMapper;
@@ -47,9 +47,9 @@ public class EstadoController {
 	@PutMapping("/{estadoId}")
 	@ResponseStatus(HttpStatus.OK)
 	public EstadoDTO atualizar(@PathVariable Long estadoId, @RequestBody @Valid Estado estado) {
-		Estado estadoAtual = cadastroEstadoService.buscarOuFalhar(estadoId);
+		Estado estadoAtual = estadoService.buscarOuFalhar(estadoId);
 		BeanUtils.copyProperties(estado,estadoAtual , "id");
-		return estadoToEstadoDTO( cadastroEstadoService.salvar(estadoAtual));
+		return estadoToEstadoDTO( estadoService.salvar(estadoAtual));
 	}
 	
 
@@ -65,7 +65,7 @@ public class EstadoController {
 	@PostMapping
 	public ResponseEntity<?> salvar(@RequestBody Estado estado) {
 		try {
-			estado = cadastroEstadoService.salvar(estado);
+			estado = estadoService.salvar(estado);
 			return ResponseEntity.status(HttpStatus.CREATED).body(estado);
 		} catch (Exception e) {
 			return ResponseEntity.badRequest().body("Erro ao salvar: " + e.getMessage());
@@ -75,6 +75,6 @@ public class EstadoController {
 	@DeleteMapping("/{estadoId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void excluir(@PathVariable Long estadoId){
-		cadastroEstadoService.excluir(estadoId);
+		estadoService.excluir(estadoId);
 	}
 }

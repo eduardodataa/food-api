@@ -15,7 +15,7 @@ import com.food.domain.model.Restaurante;
 import com.food.domain.repository.RestauranteRepository;
 
 @Service
-public class CadastroRestauranteService {
+public class RestauranteService {
 	
 	private static final String RESTAURANTE_EM_USO = "Restaurante de código %d não pode ser removida";
 
@@ -25,12 +25,12 @@ public class CadastroRestauranteService {
 	private RestauranteRepository restauranteRepository;
 	
 	@Autowired
-	private CadastroCozinhaService cadastroCozinhaService;
+	private CozinhaService cozinhaService;
 
 	@Autowired
-	private CadastroCidadeService cadastroCidadeService;
+	private CidadeService cidadeService;
 	@Autowired
-	private CadastroFormaDePagamentoService formaPagamentoService;
+	private FormaDePagamentoService formaPagamentoService;
 	
 	/**
 	 * boa prática anotar com @transaction os métodos públicos
@@ -40,8 +40,8 @@ public class CadastroRestauranteService {
 	@Transactional
 	public Restaurante salvar(Restaurante restaurante) {
 		try {
-			Cozinha cozinha = cadastroCozinhaService.buscarOuFalhar(restaurante.getCozinha().getId());
-			Cidade cidade = cadastroCidadeService.buscarOuFalhar(restaurante.getEndereco().getCidade().getId());
+			Cozinha cozinha = cozinhaService.buscarOuFalhar(restaurante.getCozinha().getId());
+			Cidade cidade = cidadeService.buscarOuFalhar(restaurante.getEndereco().getCidade().getId());
 			
 			restaurante.setCozinha(cozinha);
 			restaurante.getEndereco().setCidade(cidade);

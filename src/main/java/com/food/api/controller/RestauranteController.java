@@ -38,7 +38,7 @@ import com.food.domain.exception.EntidadeNaoEncontradaException;
 import com.food.domain.exception.NegocioException;
 import com.food.domain.model.Restaurante;
 import com.food.domain.repository.RestauranteRepository;
-import com.food.domain.service.CadastroRestauranteService;
+import com.food.domain.service.RestauranteService;
 
 @RestController
 @RequestMapping("/restaurantes")
@@ -48,7 +48,7 @@ public class RestauranteController {
 	private RestauranteRepository restauranteRepository;
 
 	@Autowired
-	private CadastroRestauranteService cadastroRestauranteService;
+	private RestauranteService restauranteService;
 	
 	@Autowired
 	private RestauranteModelAssembler  restauranteModelAssembler;
@@ -70,7 +70,7 @@ public class RestauranteController {
 
 	@GetMapping("/{restauranteId}")
 	public RestauranteDTO buscar(@PathVariable Long restauranteId) {
-		Restaurante restaurante = cadastroRestauranteService.buscarOuFalhar(restauranteId);
+		Restaurante restaurante = restauranteService.buscarOuFalhar(restauranteId);
 		
 		RestauranteDTO restauranteDTO = restauranteModelAssembler.toModel(restaurante);
 		
@@ -82,7 +82,7 @@ public class RestauranteController {
 	@ResponseStatus(HttpStatus.CREATED)
 	public RestauranteDTO salvar(@RequestBody @Valid RestauranteInput restauranteInput) {
 		try {
-			return restauranteModelAssembler.toModel(cadastroRestauranteService.salvar(restauranteInputDesassembler.toDomainModel(restauranteInput)));
+			return restauranteModelAssembler.toModel(restauranteService.salvar(restauranteInputDesassembler.toDomainModel(restauranteInput)));
 		} catch (CozinhaNaoEncontradaException | CidadeNaoEncontradaException e) {
 			throw new NegocioException(e.getMessage());
 		}
@@ -97,13 +97,13 @@ public class RestauranteController {
 	@PutMapping("/{restauranteId}") // atualização de um recurso
 	@ResponseStatus(HttpStatus.OK)
 	public RestauranteDTO atualizar(@PathVariable Long restauranteId, @RequestBody @Valid RestauranteInput restauranteInput) {
-		Restaurante restauranteAtual = cadastroRestauranteService.buscarOuFalhar(restauranteId);
+		Restaurante restauranteAtual = restauranteService.buscarOuFalhar(restauranteId);
 		
 		restauranteInputDesassembler.copyToDomainObject(restauranteInput, restauranteAtual);
 		
 //		BeanUtils.copyProperties(restaurante, restauranteAtual, "id", "formasPagamento", "endereco", "dataAtualizacao", "dataCadastro", "produtos");
 		try {
-			return restauranteModelAssembler.toModel(cadastroRestauranteService.salvar(restauranteAtual));
+			return restauranteModelAssembler.toModel(restauranteService.salvar(restauranteAtual));
 		} catch (EntidadeNaoEncontradaException e) {
 			throw new NegocioException(e.getMessage());
 		}
@@ -112,13 +112,13 @@ public class RestauranteController {
 	@DeleteMapping("/{restauranteId}") // atualização de um recurso
 	@ResponseStatus(HttpStatus.OK)
 	public void excluir(@PathVariable Long restauranteId) {
-		cadastroRestauranteService.excluir(restauranteId);
+		restauranteService.excluir(restauranteId);
 	}
 	
 	@PatchMapping("/{restauranteId}")
 	public RestauranteDTO atualizarParcial(@PathVariable Long restauranteId, @RequestBody Map<String, Object> campos, HttpServletRequest httpServletRequest){
 
-		Restaurante restauranteAtual = cadastroRestauranteService.buscarOuFalhar(restauranteId);
+		Restaurante restauranteAtual = restauranteService.buscarOuFalhar(restauranteId);
 		
 		merge(campos, restauranteAtual, httpServletRequest);
 		
@@ -128,13 +128,13 @@ public class RestauranteController {
 	@PutMapping("/{restauranteId}/ativo")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void ativar(@PathVariable Long restauranteId) {
-		cadastroRestauranteService.ativar(restauranteId);
+		restauranteService.ativar(restauranteId);
 	}
 	
 	@DeleteMapping("/{restauranteId}/ativo")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void inativar(@PathVariable Long restauranteId) {
-		cadastroRestauranteService.inativar(restauranteId);
+		restauranteService.inativar(restauranteId);
 	}
 
 	private void merge(Map<String, Object> camposOrigem, Restaurante restauranteDestino, HttpServletRequest httpServletRequest) {

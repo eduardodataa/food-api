@@ -24,7 +24,7 @@ import com.food.domain.exception.EntidadeNaoEncontradaException;
 import com.food.domain.exception.NegocioException;
 import com.food.domain.model.Cidade;
 import com.food.domain.repository.CidadeRepository;
-import com.food.domain.service.CadastroCidadeService;
+import com.food.domain.service.CidadeService;
 
 @RestController
 @RequestMapping("/cidades")
@@ -34,7 +34,7 @@ public class CidadeController {
 	private CidadeRepository cidadeRepository;
 
 	@Autowired
-	private CadastroCidadeService cadastroCidadeService;
+	private CidadeService cidadeService;
 
 	@Autowired
 	private ModelMapper modelMapper;
@@ -55,7 +55,7 @@ public class CidadeController {
 
 	@GetMapping("/{cidadeId}")
 	public CidadeDTO buscar(@PathVariable Long cidadeId) {
-		return cidadeToCidadeDTO(cadastroCidadeService.buscarOuFalhar(cidadeId));
+		return cidadeToCidadeDTO(cidadeService.buscarOuFalhar(cidadeId));
 	}
 
 	@PostMapping // post não são indempotente, cada post terá efeito colateral que será a
@@ -63,7 +63,7 @@ public class CidadeController {
 	@ResponseStatus(HttpStatus.CREATED)
 	public CidadeDTO salvar(@RequestBody Cidade cidade) {
 		try {
-			return cidadeToCidadeDTO(cadastroCidadeService.salvar(cidade));
+			return cidadeToCidadeDTO(cidadeService.salvar(cidade));
 		} catch (EntidadeNaoEncontradaException e) {
 			throw new NegocioException(e.getMessage(), e);
 		}
@@ -71,10 +71,10 @@ public class CidadeController {
 
 	@PutMapping("/{cidadeId}") // atualização de um recurso
 	public CidadeDTO atualizar(@PathVariable Long cidadeId, @RequestBody @Valid Cidade cidade) {
-		Cidade cidadeAtual = cadastroCidadeService.buscarOuFalhar(cidadeId);
+		Cidade cidadeAtual = cidadeService.buscarOuFalhar(cidadeId);
 		BeanUtils.copyProperties(cidade, cidadeAtual, "id");
 		try {
-			return cidadeToCidadeDTO(cadastroCidadeService.salvar(cidade));
+			return cidadeToCidadeDTO(cidadeService.salvar(cidade));
 		} catch (EntidadeNaoEncontradaException e) {
 			throw new NegocioException(e.getMessage(), e);
 		}
@@ -83,7 +83,7 @@ public class CidadeController {
 	@DeleteMapping("/{cidadeId}") // atualização de um recurso
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void excluir(@PathVariable Long cidadeId) {
-		cadastroCidadeService.excluir(cidadeId);
+		cidadeService.excluir(cidadeId);
 	}
 	
 

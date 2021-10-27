@@ -12,7 +12,7 @@ import com.food.domain.model.Cozinha;
 import com.food.domain.repository.CozinhaRepository;
 
 @Service
-public class CadastroCozinhaService {
+public class CozinhaService {
 	
 	private static final String MSG_COZINHA_EM_USO = "Cozinha de código %d não pode ser removida";
 //	private static final String MSG_COZINHA_NAO_ENCONTRADA = "Não existe um cadastro de cozinha com código %d";

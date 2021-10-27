@@ -26,7 +26,7 @@ import com.food.api.model.input.SenhaInput;
 import com.food.domain.exception.NegocioException;
 import com.food.domain.model.Usuario;
 import com.food.domain.repository.UsuarioRepository;
-import com.food.domain.service.CadastroUsuarioService;
+import com.food.domain.service.UsuarioService;
 
 @RestController
 @RequestMapping("/usuarios")
@@ -36,7 +36,7 @@ public class UsuarioController {
 	private UsuarioRepository usuarioRepository;
 	
 	@Autowired
-	private CadastroUsuarioService cadastroUsuarioService;
+	private UsuarioService usuarioService;
 
 	@Autowired
 	private ModelMapper modelMapper;
@@ -50,16 +50,16 @@ public class UsuarioController {
 	@PutMapping("/{usuarioId}/atualizarDados")
 	@ResponseStatus(HttpStatus.CREATED)
 	public UsuarioDTO atualizar(@PathVariable Long usuarioId, @RequestBody @Valid UsuarioInput usuario) {
-		Usuario usuarioAtual = cadastroUsuarioService.buscarOuFalhar(usuarioId);
+		Usuario usuarioAtual = usuarioService.buscarOuFalhar(usuarioId);
 		BeanUtils.copyProperties(usuario,usuarioAtual , "id");
-		return usuarioToUsuarioDTO( cadastroUsuarioService.salvar(usuarioAtual));
+		return usuarioToUsuarioDTO( usuarioService.salvar(usuarioAtual));
 	}
 	
 	//atualizar usuario
 	@PutMapping("/{usuarioId}/atualizarSenha")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void atualizar(@PathVariable Long usuarioId, @RequestBody @Valid SenhaInput usuario) {
-		cadastroUsuarioService.atualizarSenha(usuarioId, usuario);
+		usuarioService.atualizarSenha(usuarioId, usuario);
 	}
 	
 
@@ -78,9 +78,9 @@ public class UsuarioController {
 		try {
 			Usuario usuario = modelMapper.map(usuarioInput, Usuario.class);
 //			BeanUtils.copyProperties(usuarioInput,usuario);
-//			usuario = cadastroUsuarioService.salvar(usuario);
+//			usuario = usuarioService.salvar(usuario);
 //			return ResponseEntity.status(HttpStatus.CREATED).body(usuarioToUsuarioDTO(usuario));
-			return usuarioToUsuarioDTO(cadastroUsuarioService.salvar(usuario));
+			return usuarioToUsuarioDTO(usuarioService.salvar(usuario));
 		} catch (Exception e) {
 			throw new NegocioException(e.getMessage());
 		}
@@ -89,6 +89,6 @@ public class UsuarioController {
 	@DeleteMapping("/{usuarioId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void excluir(@PathVariable Long usuarioId){
-		cadastroUsuarioService.excluir(usuarioId);
+		usuarioService.excluir(usuarioId);
 	}
 }

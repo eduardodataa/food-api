@@ -12,7 +12,7 @@ import com.food.domain.model.FormaPagamento;
 import com.food.domain.repository.FormaPagamentoRepository;
 
 @Service
-public class CadastroFormaDePagamentoService {
+public class FormaDePagamentoService {
 	
 	private static final String MSG_FORMA_PAGAMENTO_EM_USO = "FormaDePagamento %d não pode ser removida, pois está em uso";
 	@Autowired

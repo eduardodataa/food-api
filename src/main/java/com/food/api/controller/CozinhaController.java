@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.food.api.model.CozinhaDTO;
 import com.food.domain.model.Cozinha;
 import com.food.domain.repository.CozinhaRepository;
-import com.food.domain.service.CadastroCozinhaService;
+import com.food.domain.service.CozinhaService;
 
 @RestController
 @RequestMapping("/cozinhas")
@@ -34,7 +34,7 @@ public class CozinhaController {
 	private CozinhaRepository cozinhaRepository;
 
 	@Autowired
-	private CadastroCozinhaService cadastroCozinhaService;
+	private CozinhaService cozinhaService;
 
 	@Autowired
 	private ModelMapper modelMapper;
@@ -47,7 +47,7 @@ public class CozinhaController {
 
 	@GetMapping("/{cozinhaId}")
 	public CozinhaDTO buscar(@PathVariable Long cozinhaId) {
-		return cozinhaToCozinhaDTO(cadastroCozinhaService.buscarOuFalhar(cozinhaId));
+		return cozinhaToCozinhaDTO(cozinhaService.buscarOuFalhar(cozinhaId));
 	}
 
 	@GetMapping("/localInexistente/{cozinhaId}")
@@ -65,22 +65,22 @@ public class CozinhaController {
 	@ResponseStatus(HttpStatus.CREATED)
 	public CozinhaDTO salvar(@RequestBody @Valid Cozinha cozinha) {
 		System.out.println(cozinha + cozinha.getNome());
-		return cozinhaToCozinhaDTO(cadastroCozinhaService.salvar(cozinha));
+		return cozinhaToCozinhaDTO(cozinhaService.salvar(cozinha));
 	}
 
 	@PutMapping("/{cozinhaId}") // atualização de um recurso
 	@ResponseStatus(HttpStatus.OK)
 	public CozinhaDTO atualizar(@PathVariable Long cozinhaId, @RequestBody @Valid Cozinha cozinha) {
-		Cozinha cozinhaAtual = cadastroCozinhaService.buscarOuFalhar(cozinhaId);
+		Cozinha cozinhaAtual = cozinhaService.buscarOuFalhar(cozinhaId);
 		BeanUtils.copyProperties(cozinha, cozinhaAtual, "id");
-		return cozinhaToCozinhaDTO(cadastroCozinhaService.salvar(cozinha));
+		return cozinhaToCozinhaDTO(cozinhaService.salvar(cozinha));
 	}
 
 	@DeleteMapping("/{cozinhaId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void excluir(@PathVariable Long cozinhaId) {
 		//Apenas o método exlcuir, pois agora a classe de exceção herda do httpstatusexception
-		cadastroCozinhaService.excluir(cozinhaId);
+		cozinhaService.excluir(cozinhaId);
 		
 	}
 	

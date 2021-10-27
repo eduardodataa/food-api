@@ -18,7 +18,7 @@ import com.food.domain.model.Usuario;
 import com.food.domain.repository.UsuarioRepository;
 
 @Service
-public class CadastroUsuarioService {
+public class UsuarioService {
 	
 	private static final String MSG_USUARIO_EM_USO = "UsuarioInput de código %d não pode ser removida, pois está em uso";
 	private static final String MSG_SENHA_VALIDA = "A senha está incorreta";
