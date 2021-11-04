@@ -14,6 +14,7 @@ import com.food.api.model.input.SenhaInput;
 import com.food.domain.exception.EntidadeEmUsoException;
 import com.food.domain.exception.NegocioException;
 import com.food.domain.exception.UsuarioNaoEncontradoException;
+import com.food.domain.model.Grupo;
 import com.food.domain.model.Usuario;
 import com.food.domain.repository.UsuarioRepository;
 
@@ -25,8 +26,8 @@ public class UsuarioService {
 	@Autowired
 	private UsuarioRepository usuarioRepository;
 	
-//	@Autowired
-//	private EntityManager entityManager;
+	@Autowired
+	private GrupoService grupoService;
 
 	@Transactional
 	public Usuario salvar(Usuario usuario) {
@@ -75,6 +76,27 @@ public class UsuarioService {
 			e.printStackTrace();
 			throw e;
 		}
+	}
+
+	@Transactional
+	public void desassociarFormaPagamento(Long usuarioId, Long grupoId) {
+		Usuario usuario = buscarOuFalhar(usuarioId);
+		Grupo grupo = grupoService.buscarOuFalhar(grupoId);
+		usuario.getGrupos().remove(grupo);
+	}
+
+	@Transactional
+	public void associarFormaPagamento(Long usuarioId, Long grupoId) {
+		try {
+			Usuario usuario = buscarOuFalhar(usuarioId);
+			Grupo grupo = grupoService.buscarOuFalhar(grupoId);
+			usuario.getGrupos().add(grupo);
+		} catch (DataIntegrityViolationException e) {
+			throw new NegocioException(MSG_SENHA_VALIDA);
+		} catch (Exception e) {
+			throw new NegocioException("Erro genérico:" + e.getMessage());
+		}
+		
 	}
 
 }
