@@ -1,0 +1,1 @@
+ALTER TABLE restaurante add COLUMN aberto TINYINT default 0

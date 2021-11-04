@@ -14,7 +14,7 @@ import com.food.domain.repository.ProdutoRepository;
 @Service
 public class ProdutoService {
 	
-	private static final String MSG_ESTADO_EM_USO = "ProdutoDTO de código %d não pode ser removida, pois está em uso";
+	private static final String MSG_ESTADO_EM_USO = "ProdutoInput de código %d não pode ser removida, pois está em uso";
 	@Autowired
 	private ProdutoRepository produtoRepository;
 

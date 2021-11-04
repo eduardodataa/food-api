@@ -137,6 +137,18 @@ public class RestauranteController {
 		restauranteService.inativar(restauranteId);
 	}
 
+	@PutMapping("/{restauranteId}/abertura")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void abertura(@PathVariable Long restauranteId) {
+		restauranteService.abertura(restauranteId);
+	}
+	
+	@PutMapping("/{restauranteId}/fechamento")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void fechamento(@PathVariable Long restauranteId) {
+		restauranteService.fechamento(restauranteId);
+	}
+
 	private void merge(Map<String, Object> camposOrigem, Restaurante restauranteDestino, HttpServletRequest httpServletRequest) {
 		try {
 			ObjectMapper objectMapper = new ObjectMapper();

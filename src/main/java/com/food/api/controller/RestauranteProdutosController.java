@@ -13,17 +13,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.food.api.model.ProdutoDTO;
+import com.food.api.model.input.ProdutoInput;
 import com.food.domain.exception.ProdutoNaoEncontradoException;
 import com.food.domain.model.Produto;
 import com.food.domain.model.Restaurante;
 import com.food.domain.repository.ProdutoRepository;
-import com.food.domain.repository.RestauranteRepository;
 import com.food.domain.service.ProdutoService;
 import com.food.domain.service.RestauranteService;
 
@@ -63,24 +64,16 @@ public class RestauranteProdutosController {
 		produto.setRestaurante(restaurante);
 		return produtoToProdutoDTO(produtoService.salvar(produto));
 	}
-//	
-//	@GetMapping("/{produtoId}")
-//	public List<ProdutoDTO> listar(@PathVariable Long restauranteId, @PathVariable Long produtoId) {
-//		return produtosToProdutosDTO(produtoRepository.findByRestaurante(restauranteId));
-//		
-//	}
-	
-//	@DeleteMapping("/{formaPagamentoId}")
-//	@ResponseStatus(HttpStatus.NO_CONTENT)
-//	public void desassociarFormaPagamento(@PathVariable Long restauranteId, @PathVariable Long formaPagamentoId) {
-//		restauranteService.desassociarFormaPagamento(restauranteId, formaPagamentoId);
-//	}
-//	
-//	@PutMapping("/{formaPagamentoId}")
-//	@ResponseStatus(HttpStatus.NO_CONTENT)
-//	public void associarFormaPagamento(@PathVariable Long restauranteId, @PathVariable Long formaPagamentoId) {
-//		restauranteService.associarFormaPagamento(restauranteId, formaPagamentoId);
-//	}
+
+	@PutMapping("/{produtoId}")
+	@ResponseStatus(HttpStatus.OK)
+	public ProdutoDTO atualizar(@PathVariable Long restauranteId, @PathVariable Long produtoId, @RequestBody @Valid ProdutoInput produtoInput) {
+		Produto produto = produtoService.buscarOuFalhar(produtoId);
+		modelMapper.map(produtoInput, produto);
+		produto = produtoService.salvar(produto);
+		return produtoToProdutoDTO(produto);
+		
+	}
 	
 	private List<ProdutoDTO> produtosToProdutosDTO(Collection<Produto> listaProduto) {
 		return listaProduto.stream().map(estado -> produtoToProdutoDTO(estado)).collect(Collectors.toList());

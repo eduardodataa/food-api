@@ -11,8 +11,8 @@ insert into estado (id, nome) values (2,'São Paulo');
 insert into cidade (id, nome, estado_id) values (1,'Florianópolis', 1);
 insert into cidade (id, nome, estado_id) values (2,'São José', 1);
 
-insert into restaurante (nome, cozinha_id, taxa_frete, data_atualizacao, data_cadastro) values ('Rocco', 4, 20,utc_timestamp, utc_timestamp);
-insert into restaurante (nome, cozinha_id, taxa_frete, data_atualizacao, data_cadastro) values ('La Boheme', 4, 20,utc_timestamp, utc_timestamp);
+insert into restaurante (nome, cozinha_id, taxa_frete, data_atualizacao, data_cadastro, aberto) values ('Rocco', 4, 20,utc_timestamp, utc_timestamp, true);
+insert into restaurante (nome, cozinha_id, taxa_frete, data_atualizacao, data_cadastro, aberto) values ('La Boheme', 4, 20,utc_timestamp, utc_timestamp, false);
 INSERT INTO restaurante (data_atualizacao, data_cadastro, endereco_bairro, endereco_cep, endereco_complemento, endereco_logradouro, endereco_numero, nome, taxa_frete, cozinha_id, endereco_cidade_id) VALUES (utc_timestamp, utc_timestamp, 'trindade', '88036200', 'casa', 'Rua',  '114', 'Trindog', 0, 1, 1);
 	
 INSERT INTO restaurante (data_atualizacao, data_cadastro, endereco_bairro, endereco_cep, endereco_complemento, endereco_logradouro, endereco_numero, nome, taxa_frete, cozinha_id, endereco_cidade_id) VALUES (utc_timestamp, utc_timestamp, 'Vargem Grande', '88036100', 'casa', 'SC 401',  '114', 'Jun', 0, 1, 1);
