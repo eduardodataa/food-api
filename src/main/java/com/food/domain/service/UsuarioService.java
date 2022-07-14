@@ -68,7 +68,7 @@ public class UsuarioService {
 			if(!usuario.getSenha().equals(senhaInput.getSenhaAtual())){
 				throw new NegocioException(MSG_SENHA_VALIDA);
 			}
-			usuario.setSenha(senhaInput.getSenhaAtual());
+			usuario.setSenha(senhaInput.getNovaSenha());
 			usuarioRepository.flush();
 			return usuario;
 		} catch (Exception e) {
