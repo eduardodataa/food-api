@@ -1,5 +1,7 @@
 package com.food.domain.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -86,6 +88,16 @@ public class RestauranteService {
 		restaurante.setAtivo(false);
 	}
 
+	@Transactional
+	public void ativar(List<Long> restauranteId) {
+		restauranteId.forEach(this::ativar);
+	}
+
+	@Transactional
+	public void inativar(List<Long> restauranteId) {
+		restauranteId.forEach(this::inativar);
+	}
+	
 	@Transactional
 	public void abertura(Long restauranteId) {
 		Restaurante restaurante = buscarOuFalhar(restauranteId);

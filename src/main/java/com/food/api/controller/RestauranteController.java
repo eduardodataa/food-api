@@ -36,6 +36,7 @@ import com.food.domain.exception.CidadeNaoEncontradaException;
 import com.food.domain.exception.CozinhaNaoEncontradaException;
 import com.food.domain.exception.EntidadeNaoEncontradaException;
 import com.food.domain.exception.NegocioException;
+import com.food.domain.exception.RestauranteNaoEncontradoException;
 import com.food.domain.model.Restaurante;
 import com.food.domain.repository.RestauranteRepository;
 import com.food.domain.service.RestauranteService;
@@ -131,10 +132,30 @@ public class RestauranteController {
 		restauranteService.ativar(restauranteId);
 	}
 	
-	@PutMapping("/{restauranteId}/inativo")
+	@PutMapping("/ativacoes")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void ativarMultiplus(@RequestBody List<Long> restaurantesId) {
+		try {
+			restauranteService.ativar(restaurantesId);
+		} catch (RestauranteNaoEncontradoException e) {
+			throw new NegocioException(e.getMessage(), e);
+		}	
+	}
+	
+	@DeleteMapping("/{restauranteId}/ativo")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void inativar(@PathVariable Long restauranteId) {
 		restauranteService.inativar(restauranteId);
+	}
+	
+	@DeleteMapping("/ativacoes")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void inativarMultiplus(@RequestBody List<Long> restaurantesId) {
+		try {
+			restauranteService.inativar(restaurantesId);
+		} catch (RestauranteNaoEncontradoException e) {
+			throw new NegocioException(e.getMessage(), e);
+		}
 	}
 
 	@PutMapping("/{restauranteId}/abertura")
