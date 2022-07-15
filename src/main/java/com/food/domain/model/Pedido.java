@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -50,7 +51,7 @@ public class Pedido {
 	@Embedded
 	private Endereco  enderecoEntrega;
 	
-	@Enumerated
+	@Enumerated(EnumType.STRING)
 	private StatusPedido status = StatusPedido.CRIADO;
 	
 

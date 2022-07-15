@@ -1,7 +1,7 @@
 create table pedido(
 	id bigint not null auto_increment,
 	subtotal decimal(10,2) not null,
-	frete decimal(10,2) not null,
+	taxa_frete decimal(10,2) not null,
 	valor_total decimal(10,2) not null,
 	data_criacao datetime not null,
 	data_confirmacao datetime,
@@ -38,8 +38,8 @@ alter table pedido add constraint fk_cliente_pedido
 create table item_pedido(
 	id bigint not null auto_increment,
 	quantidade int not null,
-	precoUnitario decimal(10,2),
-	precoTotal decimal(10,2),
+	preco_unitario decimal(10,2),
+	preco_total decimal(10,2),
 	observacao varchar (255),
 	
 	produto_id bigint not null,

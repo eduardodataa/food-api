@@ -101,15 +101,15 @@ INSERT INTO algafood.usuario_grupo (usuario_id, grupo_id) VALUES(2, 2);
 INSERT INTO algafood.usuario_grupo (usuario_id, grupo_id) VALUES(2, 3);
 
 
-INSERT INTO algafood.pedido (subtotal, frete, valor_total, data_criacao, data_confirmacao, data_cancelamento, data_entrega, endereco_cidade_id, endereco_cep, endereco_logradouro, endereco_numero, endereco_complemento, endereco_bairro, forma_pagamento_id, restaurante_id, cliente_id, status) 
+INSERT INTO algafood.pedido (subtotal, taxa_frete, valor_total, data_criacao, data_confirmacao, data_cancelamento, data_entrega, endereco_cidade_id, endereco_cep, endereco_logradouro, endereco_numero, endereco_complemento, endereco_bairro, forma_pagamento_id, restaurante_id, cliente_id, status) 
 VALUES(100, 10, 110, '2021-07-10', null, null, null, 1, '88036200', 'rua lauro linhares', '2055', null, 'Trindade', 1, 1, 1, 'CRIADO');
 
-INSERT INTO algafood.pedido (subtotal, frete, valor_total, data_criacao, data_confirmacao, data_cancelamento, data_entrega, endereco_cidade_id, endereco_cep, endereco_logradouro, endereco_numero, endereco_complemento, endereco_bairro, forma_pagamento_id, restaurante_id, cliente_id, status) 
+INSERT INTO algafood.pedido (subtotal, taxa_frete, valor_total, data_criacao, data_confirmacao, data_cancelamento, data_entrega, endereco_cidade_id, endereco_cep, endereco_logradouro, endereco_numero, endereco_complemento, endereco_bairro, forma_pagamento_id, restaurante_id, cliente_id, status) 
 VALUES(200, 20, 220, '2021-07-11', null, null, null, 1, '88036201', 'rua percy', '1141', null, 'Trindade', 1, 2, 1, 'CRIADO');
 
-INSERT INTO algafood.item_pedido (quantidade, precoUnitario, precoTotal, observacao, produto_id, pedido_id) VALUES(2, 10, 20, 'Sushi', 1, 1);
-INSERT INTO algafood.item_pedido (quantidade, precoUnitario, precoTotal, observacao, produto_id, pedido_id) VALUES(2, 20, 40, 'Sashimi Peixe Branco', 1, 2);
-INSERT INTO algafood.item_pedido (quantidade, precoUnitario, precoTotal, observacao, produto_id, pedido_id) VALUES(2, 30, 60, 'Sashimi Salmão', 2, 2);
+INSERT INTO algafood.item_pedido (quantidade, preco_unitario, preco_total, observacao, produto_id, pedido_id) VALUES(2, 10, 20, 'Sushi', 1, 1);
+INSERT INTO algafood.item_pedido (quantidade, preco_unitario, preco_total, observacao, produto_id, pedido_id) VALUES(2, 20, 40, 'Sashimi Peixe Branco', 1, 2);
+INSERT INTO algafood.item_pedido (quantidade, preco_unitario, preco_total, observacao, produto_id, pedido_id) VALUES(2, 30, 60, 'Sashimi Salmão', 2, 2);
 
 
 
