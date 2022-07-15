@@ -131,7 +131,7 @@ public class RestauranteController {
 		restauranteService.ativar(restauranteId);
 	}
 	
-	@DeleteMapping("/{restauranteId}/ativo")
+	@PutMapping("/{restauranteId}/inativo")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void inativar(@PathVariable Long restauranteId) {
 		restauranteService.inativar(restauranteId);
