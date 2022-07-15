@@ -96,5 +96,10 @@ public class Restaurante {
 	private Boolean ativo = true;
 	private Boolean aberto ;
 	
+	@ManyToMany
+	@JoinTable(name = "restaurante_usuario",
+	joinColumns = @JoinColumn(name = "restaurante_id"),
+	inverseJoinColumns = @JoinColumn(name = "usuario_id"))
+	private Set<Usuario> usuario = new HashSet<Usuario>();
 	
 }

@@ -78,6 +78,7 @@ INSERT INTO algafood.produto (ativo, descricao, nome, preco, restaurante_id) VAL
 
 INSERT INTO algafood.usuario (data_cadastro, email, nome, senha) VALUES(utc_timestamp, 'edu@edu.com', 'Eduardo Cordeiro', '123');
 INSERT INTO algafood.usuario (data_cadastro, email, nome, senha) VALUES(utc_timestamp, 'edu2@edu2.com', 'Eduardo2 Cordeiro2', '1234');
+INSERT INTO algafood.usuario (data_cadastro, email, nome, senha) VALUES(utc_timestamp, 'edu3@edu2.com', 'Eduardo3 Cordeiro3', '12345');
 
 INSERT INTO algafood.grupo (nome) VALUES('Adm');
 INSERT INTO algafood.grupo (nome) VALUES('Financeiro');
@@ -109,3 +110,9 @@ INSERT INTO algafood.item_pedido (quantidade, precoUnitario, precoTotal, observa
 INSERT INTO algafood.item_pedido (quantidade, precoUnitario, precoTotal, observacao, produto_id, pedido_id) VALUES(2, 20, 40, 'Sashimi Peixe Branco', 1, 2);
 INSERT INTO algafood.item_pedido (quantidade, precoUnitario, precoTotal, observacao, produto_id, pedido_id) VALUES(2, 30, 60, 'Sashimi Salmão', 2, 2);
 
+
+
+INSERT INTO restaurante_usuario (restaurante_id, usuario_id) VALUES(1, 1);
+INSERT INTO restaurante_usuario (restaurante_id, usuario_id) VALUES(2, 2);
+INSERT INTO restaurante_usuario (restaurante_id, usuario_id) VALUES(3, 1);
+INSERT INTO restaurante_usuario (restaurante_id, usuario_id) VALUES(3, 2);
