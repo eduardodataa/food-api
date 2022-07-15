@@ -12,6 +12,7 @@ import com.food.domain.model.Cidade;
 import com.food.domain.model.Cozinha;
 import com.food.domain.model.FormaPagamento;
 import com.food.domain.model.Restaurante;
+import com.food.domain.model.Usuario;
 import com.food.domain.repository.RestauranteRepository;
 
 @Service
@@ -29,8 +30,12 @@ public class RestauranteService {
 
 	@Autowired
 	private CidadeService cidadeService;
+
 	@Autowired
 	private FormaDePagamentoService formaPagamentoService;
+
+	@Autowired
+	private UsuarioService usuarioService;
 	
 	/**
 	 * boa prática anotar com @transaction os métodos públicos
@@ -105,6 +110,22 @@ public class RestauranteService {
 		Restaurante restaurante = buscarOuFalhar(restauranteId);
 		FormaPagamento formaPagamento = formaPagamentoService.buscarOuFalhar(formaPagamentoId);
 		restaurante.getFormasPagamento().add(formaPagamento);
+		
+	}
+
+	@Transactional
+	public void desassociarUsuario(Long restauranteId, Long usuarioId) {
+		Restaurante restaurante = buscarOuFalhar(restauranteId);
+		Usuario usuario = usuarioService.buscarOuFalhar(usuarioId);
+		restaurante.getUsuario().remove(usuario);
+		
+	}
+	
+	@Transactional
+	public void sassociarUsuario(Long restauranteId, Long usuarioId) {
+		Restaurante restaurante = buscarOuFalhar(restauranteId);
+		Usuario usuario = usuarioService.buscarOuFalhar(usuarioId);
+		restaurante.getUsuario().add(usuario);
 		
 	}
 

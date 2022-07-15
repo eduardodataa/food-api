@@ -16,13 +16,15 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.food.api.model.FormaPagamentoDTO;
+import com.food.api.model.UsuarioDTO;
 import com.food.domain.model.FormaPagamento;
 import com.food.domain.model.Restaurante;
+import com.food.domain.model.Usuario;
 import com.food.domain.service.RestauranteService;
 
 @RestController
-@RequestMapping("/restaurantes/{restauranteId}/formas-pagamento")
-public class RestauranteFormaPagamentoController {
+@RequestMapping("/restaurantes/{restauranteId}/responsaveis")
+public class RestauranteUsuarioController {
 
 	@Autowired
 	private RestauranteService restauranteService;
@@ -31,30 +33,31 @@ public class RestauranteFormaPagamentoController {
 	private ModelMapper modelMapper;
 	
 	@GetMapping
-	public List<FormaPagamentoDTO> listar(@PathVariable Long restauranteId) {
+	public List<UsuarioDTO> listar(@PathVariable Long restauranteId) {
 		
 		Restaurante restaurante = restauranteService.buscarOuFalhar(restauranteId);
-		return formasPagamentoToFormasPagamentoDTO(restaurante.getFormasPagamento());
+		return usuariosToUsuariosDTO(restaurante.getUsuario());
 		
 	}
 	
-	@DeleteMapping("/{formaPagamentoId}")
+	@DeleteMapping("/{usuarioId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void desassociarFormaPagamento(@PathVariable Long restauranteId, @PathVariable Long formaPagamentoId) {
-		restauranteService.desassociarFormaPagamento(restauranteId, formaPagamentoId);
+	public void desassociarFormaPagamento(@PathVariable Long restauranteId, @PathVariable Long usuarioId) {
+		restauranteService.desassociarUsuario(restauranteId, usuarioId);
+		
 	}
 	
-	@PutMapping("/{formaPagamentoId}")
+	@PutMapping("/{usuarioId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void associarFormaPagamento(@PathVariable Long restauranteId, @PathVariable Long formaPagamentoId) {
-		restauranteService.associarFormaPagamento(restauranteId, formaPagamentoId);
+	public void associarFormaPagamento(@PathVariable Long restauranteId, @PathVariable Long usuarioId) {
+		restauranteService.sassociarUsuario(restauranteId, usuarioId);
 	}
 	
-	private List<FormaPagamentoDTO> formasPagamentoToFormasPagamentoDTO(Collection<FormaPagamento> listaFormaPagamento) {
-		return listaFormaPagamento.stream().map(formaPagamento -> formaPagamentoToFormaPagamentoDTO(formaPagamento)).collect(Collectors.toList());
+	private List<UsuarioDTO> usuariosToUsuariosDTO(Collection<Usuario> listaUsuario) {
+		return listaUsuario.stream().map(usuario -> usuarioDTOToUsuarioDTO(usuario)).collect(Collectors.toList());
 	}
 
-	private FormaPagamentoDTO formaPagamentoToFormaPagamentoDTO(FormaPagamento formaPagamento) {
-		return modelMapper.map(formaPagamento, FormaPagamentoDTO.class);
+	private UsuarioDTO usuarioDTOToUsuarioDTO(Usuario usuario) {
+		return modelMapper.map(usuario, UsuarioDTO.class);
 	}
 }

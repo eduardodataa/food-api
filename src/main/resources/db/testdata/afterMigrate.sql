@@ -23,6 +23,7 @@ delete from usuario ;
 delete from usuario_grupo ;
 delete from pedido ;
 delete from item_pedido ;
+delete from restaurante_usuario ;
 
 set foreign_key_checks = 1;
 
@@ -112,7 +113,7 @@ INSERT INTO algafood.item_pedido (quantidade, precoUnitario, precoTotal, observa
 
 
 
-INSERT INTO restaurante_usuario (restaurante_id, usuario_id) VALUES(1, 1);
-INSERT INTO restaurante_usuario (restaurante_id, usuario_id) VALUES(2, 2);
-INSERT INTO restaurante_usuario (restaurante_id, usuario_id) VALUES(3, 1);
-INSERT INTO restaurante_usuario (restaurante_id, usuario_id) VALUES(3, 2);
+INSERT INTO algafood.restaurante_usuario (restaurante_id, usuario_id) VALUES(1, 1);
+INSERT INTO algafood.restaurante_usuario (restaurante_id, usuario_id) VALUES(2, 2);
+INSERT INTO algafood.restaurante_usuario (restaurante_id, usuario_id) VALUES(3, 1);
+INSERT INTO algafood.restaurante_usuario (restaurante_id, usuario_id) VALUES(3, 2);
