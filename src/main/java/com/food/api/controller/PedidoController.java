@@ -34,7 +34,7 @@ public class PedidoController {
 	private PedidoRepository pedidoRepository;
 
 	@Autowired
-	private PedidoService PedidoService;
+	private PedidoService pedidoService;
 
 	@Autowired
 	private ModelMapper modelMapper;
@@ -47,7 +47,7 @@ public class PedidoController {
 
 	@GetMapping("/{pedidoId}")
 	public PedidoDTO buscar(@PathVariable Long pedidoId) {
-		return pedidoToPedidoDTO(PedidoService.buscarOuFalhar(pedidoId));
+		return pedidoToPedidoDTO(pedidoService.buscarOuFalhar(pedidoId));
 	}
 
 	@GetMapping("/localInexistente/{pedidoId}")
@@ -64,23 +64,22 @@ public class PedidoController {
 	@PostMapping // post não são indempotente, cada post terá efeito colateral que será a persistência
 	@ResponseStatus(HttpStatus.CREATED)
 	public PedidoDTO salvar(@RequestBody @Valid Pedido pedido) {
-		return pedidoToPedidoDTO(PedidoService.salvar(pedido));
+		return pedidoToPedidoDTO(pedidoService.salvar(pedido));
 	}
 
 	@PutMapping("/{pedidoId}") // atualização de um recurso
 	@ResponseStatus(HttpStatus.OK)
 	public PedidoDTO atualizar(@PathVariable Long pedidoId, @RequestBody @Valid Pedido pedido) {
-		Pedido PedidoAtual = PedidoService.buscarOuFalhar(pedidoId);
+		Pedido PedidoAtual = pedidoService.buscarOuFalhar(pedidoId);
 		BeanUtils.copyProperties(pedido, PedidoAtual, "id");
-		return pedidoToPedidoDTO(PedidoService.salvar(pedido));
+		return pedidoToPedidoDTO(pedidoService.salvar(pedido));
 	}
 
 	@DeleteMapping("/{pedidoId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void excluir(@PathVariable Long pedidoId) {
 		//Apenas o método exlcuir, pois agora a classe de exceção herda do httpstatusexception
-		PedidoService.excluir(pedidoId);
-		
+		pedidoService.excluir(pedidoId);
 	}
 	
 	private List<PedidoDTO> pedidosToPedidoDTO(List<Pedido> listaPedidos) {

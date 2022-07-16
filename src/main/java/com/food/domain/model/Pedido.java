@@ -15,6 +15,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 
 import lombok.Data;
@@ -30,7 +31,7 @@ public class Pedido {
 	private BigDecimal taxaFrete;
 	private BigDecimal valorTotal;
 	
-	@CreatedDate
+	@CreationTimestamp
 	private Date dataCriacao;
 	private Date dataConfirmacao;
 	private Date dataCancelamento;
