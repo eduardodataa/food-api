@@ -7,15 +7,11 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
-import com.food.domain.model.Endereco;
 import com.food.domain.model.FormaPagamento;
-import com.food.domain.model.ItemPedido;
 import com.food.domain.model.Pedido.StatusPedido;
 
 import lombok.Getter;
 import lombok.Setter;
-
-import com.food.domain.model.Restaurante;
 
 @Getter
 @Setter

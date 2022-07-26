@@ -14,13 +14,14 @@ import lombok.Data;
 @Data
 public class ItemPedidoDTO {
 	
-	private Long id;
+	private Long produtoId;
+	private String produtoNome;
 	
 	private int quantidade;
 	private BigDecimal precoUnitario;
 	private BigDecimal precoTotal;
 	private String observacao;
 
-	private ProdutoDTO produto;
+//	private ProdutoDTO produto;
 	
 }

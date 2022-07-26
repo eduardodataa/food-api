@@ -14,7 +14,6 @@ import com.food.domain.model.Pedido;
 import com.food.domain.model.Restaurante;
 import com.food.domain.model.Usuario;
 import com.food.domain.repository.PedidoRepository;
-import com.food.domain.repository.UsuarioRepository;
 
 @Service
 public class PedidoService {

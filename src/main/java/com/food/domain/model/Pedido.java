@@ -65,7 +65,21 @@ public class Pedido {
 		CONFIRMADO,
 		ENTREGUE;
 	}	
+	
+	private void calcularValorTotal() {
+		this.subtotal = this.itensPedido.stream()
+				.map(item -> item.getPrecoTotal())
+				.reduce(BigDecimal.ZERO, BigDecimal::add);
+		
+		this.valorTotal = this.subtotal.add(taxaFrete);
+	}
 
+	
+	private void atribuirPedidosAosItens() {
+		// TODO Auto-generated method stub
+
+	}
+	
 }
 
 
